@@ -7,8 +7,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { initNotes } from "./store/slices/NotesSlice";
-import { Tooltip } from "react-tooltip";
-
 import {
   Route,
   RouterProvider,
@@ -22,8 +20,8 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<NotesContainer />} />
-      <Route path="/imp" element={<ImportantNotes />} />
-      <Route path="/complete" element={<CompletedNotes />} />
+      <Route path="imp" element={<ImportantNotes />} />
+      <Route path="complete" element={<CompletedNotes />} />
     </Route>
   )
 );
@@ -52,11 +50,6 @@ function App() {
         <RouterProvider router={router}></RouterProvider>
       </div>
       {isPopUpOpen && <Input />}
-
-      <Tooltip id="edit-btn" place="top" content="Edit note" />
-      <Tooltip id="mark-imp-btn" place="top" content="Toogle importance" />
-      <Tooltip id="mark-com-btn" place="bottom" content="Toogle completion" />
-      <Tooltip id="del-btn" place="bottom" content="Delete note" />
     </>
   );
 }

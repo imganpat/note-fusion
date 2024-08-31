@@ -1,21 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
-import {
-  toogleImportance,
-  toogleCompletion,
-  deleteNote,
-} from "../store/slices/NotesSlice";
-import {
-  MenuIcon,
-  CancelIcon,
-  EditIcon,
-  ImpIcon,
-  DisableImpIcon,
-  CheckIcon,
-  DisableCheckIcon,
-  DeleteIcon,
-  StarIcon,
-} from "..//../public/assets/svgs/index.jsx";
+import { markImp, markComplete, deleteNote } from "../store/slices/NotesSlice";
 import { openPopUp } from "../store/slices/PopupSlice.jsx";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -24,8 +9,8 @@ const Note = ({ noteData }) => {
   const dispatch = useDispatch();
   const menuBtnRef = useRef();
   const menuRef = useRef();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const noteRef = useRef(null);
+
   const utilityBtnRefs = useRef([]);
 
   utilityBtnRefs.current = [];
@@ -53,14 +38,15 @@ const Note = ({ noteData }) => {
         x: 20,
         stagger: 0.03,
         ease: "elastic",
-        clear: "opacity, x",
+        clearProps: "opacity, x",
       });
     }
   };
 
   const toggleMenu = () => {
     menuRef.current.classList.toggle("hidden");
-    setIsMenuOpen(!isMenuOpen);
+    menuBtnRef.current.childNodes[0].classList.toggle("fa-bars");
+    menuBtnRef.current.childNodes[0].classList.toggle("fa-close");
     toggleAnimation();
   };
 
@@ -77,7 +63,7 @@ const Note = ({ noteData }) => {
 
         {noteData.is_important != 0 && (
           <div className="absolute right-2 top-1 md:right-5 md:top-3">
-            <StarIcon />
+            <i className="fa-solid fa-star text-amber-500"></i>
           </div>
         )}
 
@@ -90,21 +76,19 @@ const Note = ({ noteData }) => {
             ref={menuBtnRef}
             id="edit-btn"
             className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-            onClick={() => toggleMenu()}
+            onClick={() => {
+              toggleMenu();
+            }}
           >
-            {!isMenuOpen ? <MenuIcon /> : <CancelIcon />}
+            <i className="fa-solid fa-bars"></i>
           </div>
 
           <div
             ref={menuRef}
             className="absolute right-9 flex hidden h-20 w-20 flex-wrap justify-end gap-1 md:h-fit md:w-fit md:flex-nowrap"
           >
-            {/* edit btn */}
-
             <div
-              data-tooltip-id="edit-btn"
               ref={addToRefs}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
               onClick={() => {
                 dispatch(
                   openPopUp({
@@ -118,42 +102,32 @@ const Note = ({ noteData }) => {
                 );
                 toggleMenu();
               }}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
             >
-              <EditIcon />
+              <i className="fa-solid fa-pen"></i>
             </div>
 
-            {/* Toogle importance btn */}
-
             <div
-              data-tooltip-id="mark-imp-btn"
               ref={addToRefs}
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
               onClick={() => {
-                dispatch(toogleImportance(noteData));
+                dispatch(markImp(noteData));
                 toggleMenu();
               }}
             >
-              {!noteData.is_important ? <ImpIcon /> : <DisableImpIcon />}
+              <i className="fa-solid fa-star"></i>
             </div>
-
-            {/* Toogle completion btn */}
-
             <div
-              data-tooltip-id="mark-com-btn"
               ref={addToRefs}
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
               onClick={() => {
-                dispatch(toogleCompletion(noteData));
+                dispatch(markComplete(noteData));
                 toggleMenu();
               }}
             >
-              {!noteData.is_complete ? <CheckIcon /> : <DisableCheckIcon />}
+              <i className="fa-solid fa-check"></i>
             </div>
-
-            {/* Deletion btn */}
-
             <div
-              data-tooltip-id="del-btn"
               ref={addToRefs}
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
               onClick={() => {
@@ -165,12 +139,12 @@ const Note = ({ noteData }) => {
                   display: "none",
                   onComplete: () => {
                     dispatch(deleteNote(noteData.uid));
-                    toggleMenu();
                   },
                 });
+                toggleMenu();
               }}
             >
-              <DeleteIcon />
+              <i className="fa-solid fa-trash-can"></i>
             </div>
           </div>
         </div>

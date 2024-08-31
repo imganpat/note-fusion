@@ -20,6 +20,17 @@ const getOneNote = async (req, res) => {
     })
 }
 
+const getImpNotes = async (req, res) => {
+    await db.query("SELECT * FROM notes WHERE is_important = 1", (err, rows) => {
+        try {
+            res.json(rows);
+        }
+        catch (err) {
+            res.json(err);
+        }
+    })
+}
+
 const addNewNote = async (req, res) => {
     let { uid, description, created_at, is_important, is_complete } = req.body;
 
@@ -48,19 +59,8 @@ const deleteNote = async (req, res) => {
     })
 }
 
-const toogleImportance = async (req, res) => {
-    await db.query(`UPDATE notes SET is_important = CASE WHEN is_important THEN 0 ELSE 1 END WHERE uid = '${req.params.uid}'`, (err, rows) => {
-        try {
-            res.json(rows);
-        }
-        catch (err) {
-            res.json(err);
-        }
-    })
-}
-
-const toogleCompletion = async (req, res) => {
-    await db.query(`UPDATE notes SET is_complete = CASE WHEN is_complete THEN 0 ELSE 1 END WHERE uid ='${req.params.uid}'`, (err, rows) => {
+const markImportant = async (req, res) => {
+    await db.query(`UPDATE notes SET is_important = 1 WHERE uid ='${req.params.uid}'`, (err, rows) => {
         try {
             res.json(rows);
         }
@@ -81,5 +81,15 @@ const editDesc = async (req, res) => {
     })
 }
 
+const markComplete = async (req, res) => {
+    await db.query(`UPDATE notes SET is_complete = 1 WHERE uid ='${req.params.uid}'`, (err, rows) => {
+        try {
+            res.json(rows);
+        }
+        catch (err) {
+            res.json(err);
+        }
+    })
+}
 
-export default { getAllNotes, getOneNote, addNewNote, deleteNote, toogleImportance, toogleCompletion, editDesc }
+export default { getAllNotes, getOneNote, getImpNotes, addNewNote, deleteNote, markImportant, markComplete, editDesc }
