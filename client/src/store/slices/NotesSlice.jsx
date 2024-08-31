@@ -24,20 +24,17 @@ const noteSlice = createSlice({
       axios.post(`${URL}/add`, action.payload);
     },
 
-    markImp({ notes }, action) {
+    toogleImportance({ notes }, action) {
       const note = notes.find((note) => note.uid === action.payload.uid);
-      if (note) {
-        note.is_important = 1;
-      }
+      if (note) note.is_important = note.is_important ? 0 : 1;
 
       axios.put(`${URL}/imp/${action.payload.uid}`);
     },
 
-    markComplete(state, action) {
-      const note = state.notes.find((note) => {
-        return note.uid === action.payload.uid;
-      });
-      note.is_complete = 1;
+    toogleCompletion(state, action) {
+      const note = state.notes.find((note) => note.uid === action.payload.uid);
+      if (note) note.is_complete = note.is_complete ? 0 : 1;
+
       axios.put(`${URL}/complete/${action.payload.uid}`);
     },
 
@@ -72,8 +69,8 @@ export default noteSlice;
 export const {
   initNotes,
   addNewNote,
-  markImp,
-  markComplete,
+  toogleImportance,
+  toogleCompletion,
   editNote,
   deleteNote,
 } = noteSlice.actions;

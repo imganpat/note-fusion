@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import cors from "cors"
 import express from 'express';
-import bodyParser from 'body-parser';
+import bodyParser from 'body-parser';   
 import notesRouter from "./routes/notes-routes.js"
 
 dotenv.config();
