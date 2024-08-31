@@ -2,22 +2,20 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { openPopUp } from "../store/slices/PopupSlice";
+import AddIcon from "../../public/assets/svgs/AddIcon";
 
 const linksObject = [
   {
     name: "All",
     slug: "/",
-    noteState: "all",
   },
   {
     name: "Important",
     slug: "/imp",
-    noteState: "is_important",
   },
   {
     name: "Completed",
     slug: "/complete",
-    noteState: "complete",
   },
 ];
 
@@ -29,8 +27,10 @@ const Nav = () => {
         <span className="hidden text-2xl font-semibold md:inline">
           Note Fusion
         </span>
-        <span className="inline text-2xl font-semibold md:hidden">NF</span>
-        <nav className="flex h-16 w-full -translate-x-7 translate-y-5 items-end justify-start gap-4 md:w-fit md:translate-x-0 md:translate-y-0 md:items-center md:gap-10">
+        <span className="inline -translate-y-2 text-2xl font-semibold md:hidden">
+          NF
+        </span>
+        <nav className="flex h-16 w-full -translate-x-7 items-end justify-start gap-4 md:w-fit md:translate-x-0 md:translate-y-0 md:items-center md:gap-10">
           {linksObject.map((li) => {
             return (
               <div key={li.slug}>
@@ -59,8 +59,10 @@ const Nav = () => {
           }}
           className="font-medium tracking-tight text-blue-500"
         >
-          <i className="fa-solid fa-plus mr-3 rounded-full border border-blue-500 p-1"></i>
-          <span className="hidden md:inline">Add new note</span>
+          <div className="flex items-center justify-between gap-2">
+            <AddIcon />
+            <span className="hidden md:inline">Add new note</span>
+          </div>
         </button>
       </div>
     </>

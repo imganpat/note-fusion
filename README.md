@@ -1,57 +1,10 @@
-<!-- # Note Fusion
-
-This is a modern, full-stack notes management application that lets users effortlessly create, organize, and update notes. Built with a seamless and responsive interface, this app leverages powerful frontend and backend technologies to deliver a smooth user experience. It integrates Redux for efficient state management, Tailwind CSS for sleek design, and GSAP for engaging animations. On the backend, Node.js, Express, and MySQL work together to provide a reliable and secure data handling solution.
-
-## 📝 Objective and Aim
-
-The objective of this project is to provide users with an efficient platform to manage their notes. The aim is to deliver a responsive, intuitive, and aesthetically pleasing interface while ensuring robust backend performance with a secure database connection.
-
-## 🚀 Features
-
-- Create, Read, Update, and Delete (CRUD) operations for notes.
-- Responsive UI built with Tailwind CSS.
-- Smooth animations using GSAP.
-- State management using Redux Toolkit.
-- Secure backend API using Node.js and Express.
-- Persistent storage with MySQL database.
-
-## 🛠️ Tech Stack
-
-### Frontend:
-
-- React - UI Library
-- Redux Toolkit - State Management
-- Tailwind CSS - Styling
-- GSAP - Animations
-
-### Backend:
-
-- Node.js - JavaScript Runtime
-- Express - Web Framework
-- MySQL - Database
-
-## 🖥️ How to Run Locally
-
-### Prerequisites
-
-- Node.js (v14+)
-- MySQL
-- npm or yarn
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/notes-app.git
-cd notes-app
-```
-
-## 🎯 Demo
-
-If you'd like to see the app in action, you can check out the live demo here. -->
-
 # Note Fusion
 
 This is a modern, full-stack notes management application that lets users effortlessly create, organize, and update notes. Built with a seamless and responsive interface, this app leverages powerful frontend and backend technologies to deliver a smooth user experience. It integrates Redux for efficient state management, Tailwind CSS for sleek design, and GSAP for engaging animations. On the backend, Node.js, Express, and MySQL work together to provide a reliable and secure data handling solution.
+
+## 🎯 Demo
+
+If you'd like to see the app in action, you can check out the live [demo](https://note-fusion-gc.vercel.app).
 
 ## 📝 Objective and Aim
 
@@ -92,7 +45,7 @@ The objective of this project is to provide users with an efficient platform to 
 1. **Clone the project**
 
    ```bash
-   git clone
+   git clone https://github.com/imganpat/note-fusion.git
    ```
 
 2. **Install dependencies**
