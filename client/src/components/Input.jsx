@@ -6,6 +6,7 @@ import { closePopUp } from "../store/slices/PopupSlice.jsx";
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import CancelIcon from "../../public/assets/svgs/CancelIcon.jsx";
 
 const Input = () => {
   const { isEditing, currentNote } = useSelector((state) => state.popup);
@@ -47,12 +48,27 @@ const Input = () => {
     is_completed,
   };
 
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
   return (
     <>
       <div className="flex items-center justify-center overflow-hidden rounded-lg">
         <div
           ref={popUpRef}
-          className="fixed top-1/4 flex h-80 min-w-80 flex-col items-center justify-center gap-5 rounded-md bg-white px-5 shadow-xl md:min-w-96"
+          className="fixed top-1/4 flex h-80 max-w-[85%] flex-col items-center justify-center gap-5 rounded-md bg-white px-5 shadow-xl md:min-w-96 lg:max-w-full"
         >
           <div className="flex w-full items-center justify-between">
             <span className="text-lg font-semibold text-gray-700">
@@ -63,7 +79,7 @@ const Input = () => {
               onClick={() => dispatch(closePopUp())}
               className="place-self-end"
             >
-              <i className="fa-solid fa-xmark text-2xl"></i>
+              <CancelIcon color="black" size="23" />
             </button>
           </div>
           <div className="flex w-full flex-col items-center justify-center gap-3">
@@ -71,17 +87,18 @@ const Input = () => {
               ref={inputRef}
               cols="50"
               rows="5"
-              className="flex w-full resize-none border-2 border-slate-300 px-2"
+              className="flex w-full resize-none border-2 border-slate-300 px-2 py-1"
               type="text"
               autoFocus
               placeholder="Enter your note here"
               value={description}
               onChange={(e) => {
-                setDescription(e.target.value);
-                const time = new Date();
                 setUid(nanoid());
+                setDescription(e.target.value);
+                const date = new Date();
+                const monthName = months[date.getMonth()];
                 setCreated_at(
-                  `${time.getMonth()} ${time.getDate()}, ${time.getFullYear()}`
+                  `${monthName} ${date.getDate()}, ${date.getFullYear()}`
                 );
               }}
             ></textarea>
