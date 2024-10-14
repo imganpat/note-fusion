@@ -24,12 +24,13 @@ const Note = ({ noteData }) => {
   const dispatch = useDispatch();
   const menuBtnRef = useRef();
   const menuRef = useRef();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const noteRef = useRef(null);
   const utilityBtnRefs = useRef([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   utilityBtnRefs.current = [];
 
+  // Function to add elements to the utilityBtnRefs array for animation purposes using of menu buttons
   const addToRefs = (el) => {
     if (el && !utilityBtnRefs.current.includes(el)) {
       utilityBtnRefs.current.push(el);
@@ -37,6 +38,7 @@ const Note = ({ noteData }) => {
   };
 
   useGSAP(() => {
+    // Animating the note on load
     gsap.timeline().from(noteRef.current, {
       duration: 1,
       opacity: 0,
@@ -45,6 +47,7 @@ const Note = ({ noteData }) => {
     });
   });
 
+  // Function to animate the menu buttons on toggle
   const toggleAnimation = () => {
     if (!menuRef.current.classList.contains("hidden")) {
       gsap.from(utilityBtnRefs.current, {
@@ -58,6 +61,7 @@ const Note = ({ noteData }) => {
     }
   };
 
+  // Function to toggle the menu
   const toggleMenu = () => {
     menuRef.current.classList.toggle("hidden");
     setIsMenuOpen(!isMenuOpen);
@@ -75,6 +79,7 @@ const Note = ({ noteData }) => {
           <p className="line-clamp-5">{noteData.description}</p>
         </div>
 
+        {/* Displaying star icon if note is important */}
         {noteData.is_important != 0 && (
           <div className="absolute right-2 top-1 md:right-5 md:top-3">
             <StarIcon />
@@ -92,6 +97,7 @@ const Note = ({ noteData }) => {
             className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
             onClick={() => toggleMenu()}
           >
+            {/* Ternary operator to display menu icon or cancel icon based on the state of the menu */}
             {!isMenuOpen ? <MenuIcon /> : <CancelIcon />}
           </div>
 
@@ -164,7 +170,7 @@ const Note = ({ noteData }) => {
                   duration: 0.3,
                   display: "none",
                   onComplete: () => {
-                    dispatch(deleteNote(noteData.uid));
+                    dispatch(deleteNote(noteData));
                     toggleMenu();
                   },
                 });

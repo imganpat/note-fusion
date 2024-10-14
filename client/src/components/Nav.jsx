@@ -1,9 +1,10 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { openPopUp } from "../store/slices/PopupSlice";
-import AddIcon from "../../public/assets/svgs/AddIcon";
+import { useEffect, useState, useRef } from "react";
+import Cookies from "js-cookie";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
+import URL from "../constants/backend_url";
 
+// links object for navigation
 const linksObject = [
   {
     name: "All",
@@ -20,51 +21,113 @@ const linksObject = [
 ];
 
 const Nav = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const profilePopupRef = useRef(); // profile popup ref for toggling visibility of profile popup on clicking profile icon
+
+  const [username, setUsername] = useState(Cookies.get("username") || "");
+  const [userMail, setUserMail] = useState(Cookies.get("email") || "");
+
+  const [profileBgColor, setProfileBgColor] = useState(
+    Cookies.get("profile-bg-color") // accessing profile-bg-color cookie to set profile icon background color
+  );
+
+  useEffect(() => {
+    setUsername(username.slice(0, 1).toUpperCase() + username.slice(1)); // Capitalizing first letter of username and setting it to state
+    setUserMail(userMail); // setting user email to state
+  }, [username, userMail]);
+
+  const handleLogout = async () => {
+    await axios.get(`${URL}/auth/logout`, {
+      withCredentials: true,
+    });
+    navigate("/"); // redirecting to home page after logout
+  };
+
   return (
     <>
-      <div className="fixed top-0 z-10 flex h-20 w-screen items-center justify-between bg-white px-4 py-2 md:px-16">
-        <span className="hidden text-2xl font-semibold md:inline">
-          Note Fusion
-        </span>
-        <span className="inline -translate-y-2 text-2xl font-semibold md:hidden">
-          NF
-        </span>
-        <nav className="flex h-16 w-full -translate-x-7 items-end justify-start gap-4 md:w-fit md:translate-x-0 md:translate-y-0 md:items-center md:gap-10">
-          {linksObject.map((li) => {
-            return (
-              <div key={li.slug}>
-                <NavLink
-                  to={`${li.slug}`}
-                  className={({ isActive }) => {
-                    return `capitalize duration-150 ${isActive ? "text-black" : "text-gray-400"}`;
-                  }}
-                >
-                  {li.name}
-                </NavLink>
-              </div>
-            );
-          })}
-        </nav>
-
-        <button
-          type="submit"
-          onClick={() => {
-            dispatch(
-              openPopUp({
-                isEditing: false,
-                currentNote: { uid: "", description: "" },
-              })
-            );
-          }}
-          className="font-medium tracking-tight text-blue-500"
+      <div className="flex min-h-16 w-full items-center justify-end px-0 py-2 shadow sm:px-4 md:px-6 lg:px-8">
+        <div
+          id="profile"
+          className="flex h-full w-fit items-center justify-center gap-4"
         >
-          <div className="flex items-center justify-between gap-2">
-            <AddIcon />
-            <span className="hidden md:inline">Add new note</span>
+          <span className="">Hello, {username}</span>
+
+          {/* checking if username is present or not to display profile icon. If not logged in profile icon is not displayed */}
+          {username && (
+            <span
+              className={`mr-4 grid h-10 w-10 cursor-pointer place-items-center rounded-full ${profileBgColor} text-lg font-semibold text-white`}
+              onClick={() => {
+                profilePopupRef.current.classList.toggle("hidden"); // toggling visibility of profile popup on clicking profile icon
+              }}
+            >
+              {/* displaying first letter of username in profile icon */}
+              <span>{username[0]}</span>{" "}
+            </span>
+          )}
+
+          {/* Profile popup */}
+          <div
+            ref={profilePopupRef}
+            className="absolute right-4 top-12 z-20 flex hidden h-40 w-80 flex-col gap-2 rounded-lg bg-slate-50 px-4 py-5 shadow-lg"
+          >
+            <span className="font-semibold">Note Fusion</span>
+
+            <span
+              className="absolute right-6 top-8 cursor-pointer hover:text-blue-700"
+              onClick={() => handleLogout()}
+            >
+              Logout
+            </span>
+
+            <div className="flex h-16 w-full flex-1 gap-2">
+              <div className="flex h-full min-w-fit items-center justify-center">
+                <span
+                  // setting background color of profile icon from profile-bg-color cookie
+                  className={`grid h-12 w-12 place-items-center rounded-full ${profileBgColor} text-lg font-semibold text-white`}
+                >
+                  {/* displaying first letter of username in profile icon */}
+                  <span>{username[0]}</span>
+                </span>
+              </div>
+              <div className="flex h-full w-2/3">
+                <div className="flex h-full w-full flex-col justify-center">
+                  <span className="text-lg font-semibold">{username}</span>
+                  <span className="-mt-1 text-sm text-gray-600">
+                    {userMail} 
+                  </span>
+                  <NavLink
+                    to={"/profile"}
+                    className="mt-1 cursor-pointer text-sm text-gray-600 hover:text-blue-700 hover:underline"
+                    onClick={() =>
+                      profilePopupRef.current.classList.toggle("hidden")
+                    }
+                  >
+                    View Profile
+                  </NavLink>
+                </div>
+              </div>
+            </div>
           </div>
-        </button>
+        </div>
       </div>
+
+      {/* Navigation links for mobile view only */}
+      <nav className="mx-4 my-2 flex gap-4 sm:hidden">
+        {linksObject.map((li) => {
+          return (
+            <div key={li.slug}>
+              <NavLink
+                to={`${li.slug}`}
+                className={({ isActive }) => {
+                  return `flex h-10 cursor-pointer items-center rounded-full px-4 py-2 capitalize duration-200 hover:bg-blue-100 sm:px-2 md:rounded-md ${isActive ? "bg-blue-100" : "bg-transparent"}`;
+                }}
+              >
+                {li.name}
+              </NavLink>
+            </div>
+          );
+        })}
+      </nav>
     </>
   );
 };

@@ -3,11 +3,13 @@ import { useSelector } from "react-redux";
 import Note from "./Note";
 
 const NotesContainer = () => {
+  // getting notes from redux store
   const note = useSelector((state) => state.notes.notes);
 
   return (
     <>
-      <div className="max-w-screen mt-20 grid max-h-fit grid-cols-2 place-items-center gap-4 py-5 sm:grid-cols-3 md:grid-cols-3 md:gap-8 md:px-5 lg:grid-cols-5">
+      <div className="flex flex-wrap justify-start gap-4 p-8">
+        {/* Checking if the notes are present or not */}
         {note.length <= 0 ? (
           <h1 className="col-span-5 text-2xl text-blue-600">
             Your notes will appear here

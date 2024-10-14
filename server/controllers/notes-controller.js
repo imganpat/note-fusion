@@ -1,7 +1,9 @@
 import db from "../config/db-config.js"
 
 const getAllNotes = async (req, res) => {
-    await db.query("SELECT * FROM notes", (err, rows) => {
+    const username = req.cookies.username;
+    const sql = "SELECT * FROM notes WHERE username = ?";
+    await db.query(sql, [username], (err, rows) => {
         try {
             res.json(rows)
         } catch (err) {
@@ -9,9 +11,13 @@ const getAllNotes = async (req, res) => {
         }
     })
 }
+
 
 const getOneNote = async (req, res) => {
-    await db.query(`SELECT * FROM notes WHERE uid = "${req.params.uid}"`, (err, rows) => {
+    const uid = req.params.uid;
+    const username = req.cookies.username;
+    const sql = "SELECT * FROM notes WHERE uid = ? AND username = ?";
+    await db.query(sql, [uid, username], (err, rows) => {
         try {
             res.json(rows)
         } catch (err) {
@@ -20,13 +26,15 @@ const getOneNote = async (req, res) => {
     })
 }
 
+
 const addNewNote = async (req, res) => {
-    let { uid, description, created_at, is_important, is_complete } = req.body;
+    let { uid, description, created_at, is_important, is_complete, username } = req.body;
+    const sql = ("INSERT INTO notes (uid, description, created_at, is_important, is_complete, username) VALUES (?, ?, ?, ?, ?, ?)");
 
     is_important = is_important ? 1 : 0;
     is_complete = is_complete ? 1 : 0;
 
-    await db.query(`INSERT INTO notes (uid, description, created_at, is_important, is_complete) VALUES ('${uid}','${description}', '${created_at}',${is_important}, ${is_complete})`, (err, rows) => {
+    await db.query(sql, [uid, description, created_at, is_important, is_complete, username], (err, rows) => {
         try {
             res.json(rows)
         }
@@ -37,8 +45,13 @@ const addNewNote = async (req, res) => {
 
 }
 
+
 const deleteNote = async (req, res) => {
-    await db.query(`DELETE FROM notes where uid = '${req.params.uid}'`, (err, rows) => {
+    const { uid } = req.params;
+    const { username } = req.body;
+
+    const sql = "DELETE FROM notes WHERE uid = ? AND username = ?";
+    await db.query(sql, [uid, username], (err, rows) => {
         try {
             res.json(rows);
         }
@@ -47,9 +60,14 @@ const deleteNote = async (req, res) => {
         }
     })
 }
+
 
 const toogleImportance = async (req, res) => {
-    await db.query(`UPDATE notes SET is_important = CASE WHEN is_important THEN 0 ELSE 1 END WHERE uid = '${req.params.uid}'`, (err, rows) => {
+    const { uid } = req.params;
+    const { username } = req.body;
+
+    const sql = "UPDATE notes SET is_important = CASE WHEN is_important THEN 0 ELSE 1 END WHERE uid = ? AND username = ?";
+    await db.query(sql, [uid, username], (err, rows) => {
         try {
             res.json(rows);
         }
@@ -58,9 +76,13 @@ const toogleImportance = async (req, res) => {
         }
     })
 }
+
 
 const toogleCompletion = async (req, res) => {
-    await db.query(`UPDATE notes SET is_complete = CASE WHEN is_complete THEN 0 ELSE 1 END WHERE uid ='${req.params.uid}'`, (err, rows) => {
+    const { uid } = req.params;
+    const { username } = req.body;
+    const sql = "UPDATE notes SET is_complete = CASE WHEN is_complete THEN 0 ELSE 1 END WHERE uid = ? AND username = ?";
+    await db.query(sql, [uid, username], (err, rows) => {
         try {
             res.json(rows);
         }
@@ -69,9 +91,16 @@ const toogleCompletion = async (req, res) => {
         }
     })
 }
+
 
 const editDesc = async (req, res) => {
-    await db.query(`UPDATE notes SET description = '${req.body.description}', is_important = '${(req.body.is_important) ? 1 : 0}' where uid = '${req.body.uid}'`, (err, rows) => {
+    const { uid } = req.params;
+    let { description, is_important, username } = req.body;
+    is_important = is_important ? 1 : 0;
+
+    const sql = "UPDATE notes SET description = ?, is_important = ? WHERE uid = ? AND username = ?";
+
+    await db.query(sql, [description, is_important, uid, username], (err, rows) => {
         try {
             res.json(rows);
         }
@@ -80,6 +109,5 @@ const editDesc = async (req, res) => {
         }
     })
 }
-
 
 export default { getAllNotes, getOneNote, addNewNote, deleteNote, toogleImportance, toogleCompletion, editDesc }

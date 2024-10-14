@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { initNotes } from "./store/slices/NotesSlice";
 import { Tooltip } from "react-tooltip";
-
 import {
   Route,
   RouterProvider,
@@ -17,22 +16,38 @@ import {
 } from "react-router-dom";
 import Layout from "./components/Layout";
 import backendUrl from "./constants/backend_url";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./components/Profile";
+import Sidebar from "./components/Sidebar";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
-      <Route path="" element={<NotesContainer />} />
-      <Route path="/imp" element={<ImportantNotes />} />
-      <Route path="/complete" element={<CompletedNotes />} />
-    </Route>
+    <>
+      <Route path="/" element={<Layout />}>
+        <Route path="" element={<NotesContainer />} />
+        <Route path="/imp" element={<ImportantNotes />} />
+        <Route path="/complete" element={<CompletedNotes />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/sidebar" element={<Sidebar />} />
+      </Route>
+
+      <Route path="/auth">
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+      </Route>
+    </>
   )
 );
 
 const fetchData = async () => {
-  const data = await axios.get(backendUrl);
-  return data.data;
+  const response = await axios.get(`${backendUrl}/api/notes`, {
+    withCredentials: true,
+  });
+  return response.data;
 };
 
+// Function to initialize the store woth the user notes
 const fetchDataAndDispatch = async (dispatch) => {
   let apiData = await fetchData();
   dispatch(initNotes(apiData));
@@ -40,19 +55,16 @@ const fetchDataAndDispatch = async (dispatch) => {
 
 function App() {
   const dispatch = useDispatch();
+  const isPopUpOpen = useSelector((state) => state.popup.isPopupOpen);
+
   useEffect(() => {
     fetchDataAndDispatch(dispatch);
   }, [dispatch]);
 
-  const isPopUpOpen = useSelector((state) => state.popup.isPopupOpen);
-
   return (
     <>
-      <div className="b mt-5 flex w-full flex-col items-center gap-5">
-        <RouterProvider router={router}></RouterProvider>
-      </div>
+      <RouterProvider router={router}></RouterProvider>
       {isPopUpOpen && <Input />}
-
       <Tooltip id="edit-btn" place="top" content="Edit note" />
       <Tooltip id="mark-imp-btn" place="top" content="Toogle importance" />
       <Tooltip id="mark-com-btn" place="bottom" content="Toogle completion" />

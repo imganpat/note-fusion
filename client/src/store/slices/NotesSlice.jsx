@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import backendUrl from "../../constants/backend_url";
 
-const URL = backendUrl;
+const URL = `${backendUrl}/api/notes`;
 
 const initialState = {
   notes: [],
@@ -26,22 +26,23 @@ const noteSlice = createSlice({
 
     toogleImportance({ notes }, action) {
       const note = notes.find((note) => note.uid === action.payload.uid);
-      if (note) note.is_important = note.is_important ? 0 : 1;
+      if (note) note.is_important = note.is_important ? 0 : 1; // Coverting True to 1 and false to 0
 
-      axios.put(`${URL}/imp/${action.payload.uid}`);
+      axios.put(`${URL}/imp/${action.payload.uid}`, action.payload);
     },
 
     toogleCompletion(state, action) {
       const note = state.notes.find((note) => note.uid === action.payload.uid);
-      if (note) note.is_complete = note.is_complete ? 0 : 1;
+      if (note) note.is_complete = note.is_complete ? 0 : 1; // Coverting True to 1 and false to 0
 
-      axios.put(`${URL}/complete/${action.payload.uid}`);
+      axios.put(`${URL}/complete/${action.payload.uid}`, action.payload);
     },
 
     editNote(state, action) {
-      const currentUid = action.payload.currentNote.uid;
+      const currentUid = action.payload.uid;
       const newDesc = action.payload.description;
       const newImp = action.payload.is_important;
+      const username = action.payload.username;
 
       const note = state.notes.map((eachNote) => {
         if (eachNote.uid === currentUid) {
@@ -51,15 +52,20 @@ const noteSlice = createSlice({
       });
 
       axios.put(`${URL}/edit/${action.payload.uid}`, {
-        uid: currentUid,
         description: newDesc,
         is_important: newImp,
+        username: username,
       });
     },
 
     deleteNote(state, action) {
-      axios.delete(`${URL}/delete/${action.payload}`);
-      state.notes.filter((note) => note.uid !== action.payload);
+      const username = action.payload.username;
+      state.notes.filter((note) => note.uid !== action.payload.uid);
+      axios.delete(`${URL}/delete/${action.payload.uid}`, {
+        data: {
+          username,
+        },
+      });
     },
   },
 });
