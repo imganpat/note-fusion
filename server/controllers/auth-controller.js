@@ -29,9 +29,17 @@ const loginPost = async (req, res) => {
             if (rows && rows.length > 0) {
                 const user = rows[0];
                 res.cookie("username", user.username, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'true',
                     maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
                 });
-                res.cookie("email", user.email, { maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) });
+                res.cookie("email", user.email, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'None',
+                    maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+                });
 
                 res.json(`Welcome ${username}`);
             } else {
