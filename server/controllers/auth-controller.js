@@ -31,13 +31,13 @@ const loginPost = async (req, res) => {
                 res.cookie("username", user.username, {
                     httpOnly: false,
                     secure: false,
-                    sameSite: 'None',
+                    sameSite: false,
                     maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
                 });
                 res.cookie("email", user.email, {
                     httpOnly: false,
                     secure: false,
-                    sameSite: 'None',
+                    sameSite: false,
                     maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
                 });
 
