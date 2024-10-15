@@ -30,14 +30,14 @@ const loginPost = async (req, res) => {
                 const user = rows[0];
                 res.cookie("username", user.username, {
                     httpOnly: false,
-                    secure: false,
-                    sameSite: false,
+                    secure: true,
+                    sameSite: 'None',
                     maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
                 });
                 res.cookie("email", user.email, {
                     httpOnly: false,
-                    secure: false,
-                    sameSite: false,
+                    secure: true,
+                    sameSite: 'None',
                     maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
                 });
 

@@ -13,7 +13,7 @@ app.use(cookieParser());
 
 
 app.use(cors({
-    origin: true, // <-- allow requests from any origin
+    origin: "https://note-fusion-gc.vercel.app/",
     credentials: true
 }))
 
