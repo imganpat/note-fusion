@@ -1,10 +1,10 @@
 import db from "../config/db-config.js";
 
-const registerPost = (req, res) => {
+const registerPost = async (req, res) => {
     const { userId, email, password, username } = req.body;
     const sql = "INSERT INTO users (user_id, username, email, password ) VALUES (?, ?, ?, ?)";
 
-    db.query(sql, [userId, username, email, password], (err, result) => {
+    await db.query(sql, [userId, username, email, password], (err, result) => {
         if (err) {
             console.log(err);
             res.status(500).send("Error registering user");
@@ -20,7 +20,7 @@ const loginPost = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        db.query("SELECT * FROM users WHERE username = ? AND password = ?", [username, password], (err, rows) => {
+        await db.query("SELECT * FROM users WHERE username = ? AND password = ?", [username, password], (err, rows) => {
             if (err) {
                 console.error("Database query error:", err);
                 return res.status(500).json({ message: "Internal server error" });
@@ -30,13 +30,13 @@ const loginPost = async (req, res) => {
                 const user = rows[0];
                 res.cookie("username", user.username, {
                     httpOnly: false,
-                    secure: true,
+                    secure: false,
                     sameSite: 'None',
                     maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
                 });
                 res.cookie("email", user.email, {
                     httpOnly: false,
-                    secure: true,
+                    secure: false,
                     sameSite: 'None',
                     maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
                 });
