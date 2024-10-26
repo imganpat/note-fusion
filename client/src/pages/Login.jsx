@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../constants/backend_url.js";
 
+axios.defaults.withCredentials = true;
+
 // Setting the url for authentication
 const URL = `${backendUrl}/auth`;
 
@@ -46,6 +48,7 @@ const Login = () => {
         withCredentials: true, // Ensure cookies are included
       });
       navigate("/"); // Redirect upon successful login
+      window.location.reload();
       Cookies.set("profile-bg-color", profileBgColor, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       });

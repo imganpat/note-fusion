@@ -9,13 +9,14 @@ import authRouter from './routes/auth-routes.js';
 dotenv.config();
 
 const app = express();
-app.use(cookieParser());
 
 
 app.use(cors({
-    origin: true, // <-- allow requests from any origin
+    origin: ["https://note-fusion-gc.vercel.app", "http://localhost:5173"],
     credentials: true
 }))
+
+app.use(cookieParser());
 
 
 app.use(bodyParser.urlencoded({ extended: true }))
