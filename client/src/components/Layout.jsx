@@ -24,7 +24,7 @@ const Layout = () => {
         </div>
         <div className="flex flex-1 flex-col">
           <Nav />
-          <div className="overflow-y-scroll">
+          <div className="flex flex-1 overflow-y-scroll">
             <Outlet />
           </div>
         </div>

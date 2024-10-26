@@ -93,7 +93,7 @@ const Nav = () => {
                 <div className="flex h-full w-full flex-col justify-center">
                   <span className="text-lg font-semibold">{username}</span>
                   <span className="-mt-1 text-sm text-gray-600">
-                    {userMail} 
+                    {userMail}
                   </span>
                   <NavLink
                     to={"/profile"}
@@ -119,7 +119,7 @@ const Nav = () => {
               <NavLink
                 to={`${li.slug}`}
                 className={({ isActive }) => {
-                  return `flex h-10 cursor-pointer items-center rounded-full px-4 py-2 capitalize duration-200 hover:bg-blue-100 sm:px-2 md:rounded-md ${isActive ? "bg-blue-100" : "bg-transparent"}`;
+                  return `flex h-10 cursor-pointer items-center rounded-full border-l-0 px-4 py-2 capitalize duration-200 hover:border hover:border-gray-500 sm:px-2 md:rounded-md ${isActive ? "bg-blue-900 text-white" : "bg-transparent"}`;
                 }}
               >
                 {li.name}
