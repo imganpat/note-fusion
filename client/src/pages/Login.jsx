@@ -47,11 +47,11 @@ const Login = () => {
       const response = await axios.post(`${URL}/login`, user, {
         withCredentials: true, // Ensure cookies are included
       });
+      localStorage.setItem("profile-bg-color", profileBgColor);
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("email", response.data.email);
+      localStorage.setItem("profile-bg-color", profileBgColor);
       navigate("/"); // Redirect upon successful login
-      window.location.reload();
-      Cookies.set("profile-bg-color", profileBgColor, {
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-      });
       return response.data;
     } catch (error) {
       // Handle error if login fails

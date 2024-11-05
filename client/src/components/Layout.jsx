@@ -5,7 +5,7 @@ import Nav from "./Nav";
 import Sidebar from "./Sidebar";
 
 const Layout = () => {
-  const username = Cookies.get("username");
+  const username = localStorage.getItem("username");
   const navigate = useNavigate();
 
   useEffect(() => {

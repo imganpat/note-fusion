@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import Cookies from "js-cookie";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import URL from "../constants/backend_url";
+import backendUrl from "../constants/backend_url";
 
 // links object for navigation
 const linksObject = [
@@ -24,11 +24,13 @@ const Nav = () => {
   const navigate = useNavigate();
   const profilePopupRef = useRef(); // profile popup ref for toggling visibility of profile popup on clicking profile icon
 
-  const [username, setUsername] = useState(Cookies.get("username") || "");
-  const [userMail, setUserMail] = useState(Cookies.get("email") || "");
+  const [username, setUsername] = useState(
+    localStorage.getItem("username") || ""
+  );
+  const [userMail, setUserMail] = useState(localStorage.getItem("email") || "");
 
   const [profileBgColor, setProfileBgColor] = useState(
-    Cookies.get("profile-bg-color") // accessing profile-bg-color cookie to set profile icon background color
+    localStorage.getItem("profile-bg-color") // accessing profile-bg-color cookie to set profile icon background color
   );
 
   useEffect(() => {
@@ -40,6 +42,9 @@ const Nav = () => {
     await axios.get(`${URL}/auth/logout`, {
       withCredentials: true,
     });
+    localStorage.clear("username");
+    localStorage.clear("email");
+    localStorage.clear("profile-bg-color");
     navigate("/"); // redirecting to home page after logout
   };
 
@@ -93,7 +98,7 @@ const Nav = () => {
                 <div className="flex h-full w-full flex-col justify-center">
                   <span className="text-lg font-semibold">{username}</span>
                   <span className="-mt-1 text-sm text-gray-600">
-                    {userMail} 
+                    {userMail}
                   </span>
                   <NavLink
                     to={"/profile"}
