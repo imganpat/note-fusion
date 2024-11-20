@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../../src/constants/backend_url";
 import { nanoid } from "@reduxjs/toolkit";
 
-const URL = `${backendUrl}/auth`;
+const URL = `${backendUrl}/api/auth`;
 
 const Register = () => {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const Register = () => {
 
   return (
     <>
-      <div className="-mt-5 flex h-dvh w-screen items-center justify-center bg-slate-400 p-6 lg:h-screen">
+      <div className="flex h-dvh w-screen items-center justify-center bg-slate-400 p-6 lg:h-screen">
         <div className="flex h-[95%] w-80 gap-4 rounded-lg bg-white p-2 lg:h-4/5 lg:w-4/6 lg:rounded-2xl lg:p-4">
           <div className="hidden h-full w-1/2 flex-col justify-center gap-8 bg-slate-200 p-10 lg:flex">
             <span className="text-3xl font-semibold">Note Fusion</span>
@@ -52,15 +52,15 @@ const Register = () => {
               </h3>
               <p className="text-gray-600">
                 Our registration process is quick and easy, taking no more than
-                5 minutes to complete
+                5 minutes to complete.
               </p>
             </div>
             <div className="h-2/5 w-full"></div>
           </div>
           <div className="h-full w-96 py-3 lg:w-1/2 lg:py-0">
             <form onSubmit={handleSubmit}>
-              <div className="flex h-96 w-full flex-col gap-3 p-2 lg:h-full lg:p-8">
-                <div className="relative mb-4">
+              <div className="flex h-96 w-full flex-col gap-3 p-2 lg:h-full lg:p-4">
+                <div className="relative mb-2">
                   <h2 className="text-center text-3xl font-semibold text-gray-700 lg:mb-2 lg:text-start">
                     Register
                   </h2>
@@ -76,7 +76,7 @@ const Register = () => {
                     Email
                   </label>
                   <input
-                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-3 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                    className="w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="email"
                     type="email"
                     required
@@ -94,7 +94,7 @@ const Register = () => {
                     Username
                   </label>
                   <input
-                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-3 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                    className="w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="username"
                     type="text"
                     required
@@ -112,7 +112,7 @@ const Register = () => {
                     Password
                   </label>
                   <input
-                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-3 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                    className="w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="password"
                     type="password"
                     required
@@ -127,7 +127,7 @@ const Register = () => {
                 {success && <p className="text-green-500">{success}</p>}{" "}
                 {/* Display success message */}
                 <button
-                  className="focus:shadow-outline rounded bg-blue-500 px-4 py-3 font-bold text-white hover:bg-blue-600 focus:outline-none"
+                  className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none"
                   type="submit"
                 >
                   Sign Up

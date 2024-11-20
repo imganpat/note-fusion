@@ -21,21 +21,36 @@ const noteSlice = createSlice({
 
     addNewNote(state, action) {
       state.notes.push(action.payload);
-      axios.post(`${URL}/add`, action.payload);
+      axios.post(`${URL}/add`, action.payload, {
+        withCredentials: true,
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
     },
 
     toogleImportance({ notes }, action) {
       const note = notes.find((note) => note.uid === action.payload.uid);
       if (note) note.is_important = note.is_important ? 0 : 1; // Coverting True to 1 and false to 0
 
-      axios.put(`${URL}/imp/${action.payload.uid}`, action.payload);
+      axios.put(`${URL}/imp/${action.payload.uid}`, action.payload, {
+        withCredentials: true,
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
     },
 
     toogleCompletion(state, action) {
       const note = state.notes.find((note) => note.uid === action.payload.uid);
       if (note) note.is_complete = note.is_complete ? 0 : 1; // Coverting True to 1 and false to 0
 
-      axios.put(`${URL}/complete/${action.payload.uid}`, action.payload);
+      axios.put(`${URL}/complete/${action.payload.uid}`, action.payload, {
+        withCredentials: true,
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
     },
 
     editNote(state, action) {
@@ -51,19 +66,29 @@ const noteSlice = createSlice({
         }
       });
 
-      axios.put(`${URL}/edit/${action.payload.uid}`, {
-        description: newDesc,
-        is_important: newImp,
-        username: username,
-      });
+      axios.put(
+        `${URL}/edit/${action.payload.uid}`,
+        {
+          description: newDesc,
+          is_important: newImp,
+          username: username,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
     },
 
     deleteNote(state, action) {
-      const username = action.payload.username;
       state.notes.filter((note) => note.uid !== action.payload.uid);
+
       axios.delete(`${URL}/delete/${action.payload.uid}`, {
-        data: {
-          username,
+        withCredentials: true,
+        headers: {
+          Authorization: localStorage.getItem("token"),
         },
       });
     },

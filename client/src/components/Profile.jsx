@@ -1,8 +1,6 @@
-import Cookies from "js-cookie";
-
 const Profile = () => {
-  const username = Cookies.get("username");
-  const email = Cookies.get("email");
+  const username = localStorage.getItem("username");
+  const email = localStorage.getItem("email");
   return (
     // <div className="flex items-center justify-center bg-red-400 text-3xl">
     //   hello

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Cookies from "js-cookie";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { nanoid } from "@reduxjs/toolkit";
@@ -8,7 +7,7 @@ import { addNewNote, editNote } from "../store/slices/NotesSlice.jsx";
 import { closePopUp } from "../store/slices/PopupSlice.jsx";
 import CancelIcon from "../../public/assets/svgs/CancelIcon.jsx";
 
-const user = Cookies.get("username"); // getting username from cookies
+const user = localStorage.getItem("username"); // getting username from local storage
 
 const months = [
   "Jan",

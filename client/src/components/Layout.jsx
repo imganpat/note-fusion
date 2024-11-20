@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import Nav from "./Nav";
 import Sidebar from "./Sidebar";
 
 const Layout = () => {
-  const username = Cookies.get("username");
+  const username = localStorage.getItem("username");
   const navigate = useNavigate();
 
   useEffect(() => {
