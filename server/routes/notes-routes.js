@@ -1,18 +1,19 @@
 import express from "express";
 import notesController from "../controllers/notes-controller.js";
+import isAuthenticated from "../middlewares/auth-middleware.js";
 
 const router = express.Router();
 
-router.get("/", notesController.getAllNotes)
+router.get("/", isAuthenticated, notesController.getAllNotes)
 
-router.post("/add", notesController.addNewNote)
+router.post("/add", isAuthenticated, notesController.addNewNote)
 
-router.put("/imp/:uid", notesController.toogleImportance)
+router.put("/imp/:uid", isAuthenticated, notesController.toogleImportance)
 
-router.put("/complete/:uid", notesController.toogleCompletion)
+router.put("/complete/:uid", isAuthenticated, notesController.toogleCompletion)
 
-router.put("/edit/:uid", notesController.editDesc)
+router.put("/edit/:uid", isAuthenticated, notesController.editDesc)
 
-router.delete("/delete/:uid", notesController.deleteNote)
+router.delete("/delete/:uid", isAuthenticated, notesController.deleteNote)
 
 export default router;

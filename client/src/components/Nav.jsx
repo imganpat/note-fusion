@@ -39,7 +39,7 @@ const Nav = () => {
   }, [username, userMail]);
 
   const handleLogout = async () => {
-    await axios.get(`${URL}/auth/logout`, {
+    await axios.get(`${URL}/api/auth/logout`, {
       withCredentials: true,
     });
     localStorage.clear("username");
@@ -47,6 +47,10 @@ const Nav = () => {
     localStorage.clear("profile-bg-color");
     navigate("/"); // redirecting to home page after logout
   };
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") profilePopupRef.current.classList.add("hidden");
+  });
 
   return (
     <>
@@ -124,7 +128,7 @@ const Nav = () => {
               <NavLink
                 to={`${li.slug}`}
                 className={({ isActive }) => {
-                  return `flex h-10 cursor-pointer items-center rounded-full px-4 py-2 capitalize duration-200 hover:bg-blue-100 sm:px-2 md:rounded-md ${isActive ? "bg-blue-100" : "bg-transparent"}`;
+                  return `flex h-10 cursor-pointer items-center rounded-full border-l-0 px-4 py-2 capitalize duration-200 hover:border hover:border-gray-500 sm:px-2 md:rounded-md ${isActive ? "bg-blue-900 text-white" : "bg-transparent"}`;
                 }}
               >
                 {li.name}

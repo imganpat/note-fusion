@@ -1,18 +1,20 @@
+import jwt from "jsonwebtoken"
 import db from "../config/db-config.js";
 
 const registerPost = async (req, res) => {
+
+    // FIXME:
+    // user id should be created on backend not on frontend
+
     const { userId, email, password, username } = req.body;
     const sql = "INSERT INTO users (user_id, username, email, password ) VALUES (?, ?, ?, ?)";
 
     await db.query(sql, [userId, username, email, password], (err, result) => {
-        if (err) {
-            console.log(err);
+        if (err)
             res.status(500).send("Error registering user");
-        } else {
-            console.log(result);
-        }
+        else
+            res.status(201).json({ message: "Registration successfull" });
     });
-    res.json({ userId, email, password, username });
 };
 
 
@@ -22,42 +24,25 @@ const loginPost = async (req, res) => {
     try {
         await db.query("SELECT * FROM users WHERE username = ? AND password = ?", [username, password], (err, rows) => {
             if (err) {
-                console.error("Database query error:", err);
                 return res.status(500).json({ message: "Internal server error" });
             }
 
             if (rows && rows.length > 0) {
                 const user = rows[0];
-                res.cookie("username", user.username, {
-                    httpOnly: false,
-                    secure: true,
-                    sameSite: 'None',
-                    maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-                });
-                res.cookie("email", user.email, {
-                    httpOnly: false,
-                    secure: true,
-                    sameSite: 'None',
-                    maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
-                });
-
-                res.json(`Welcome ${username}`);
+                const token = jwt.sign({ username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" })
+                res.status(200).json({ message: "Login successful", token, username: user.username, email: user.email });
             } else {
                 res.status(401).json({ message: "Invalid username or password" });
             }
         });
     } catch (error) {
-        console.error("Unexpected error:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
 
 
 const logout = (req, res) => {
-    res.cookie('username', '', { expires: new Date(0) });
-    res.cookie('email', '', { expires: new Date(0) });
-    res.cookie('profile-bg-color', '', { expires: new Date(0) });
-    res.send("Log out successfully");
+    res.status(200).json({ message: "Log out successfully" });
 }
 
 export default { registerPost, loginPost, logout };

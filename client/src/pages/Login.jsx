@@ -1,13 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
-import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../constants/backend_url.js";
 
-axios.defaults.withCredentials = true;
-
 // Setting the url for authentication
-const URL = `${backendUrl}/auth`;
+const URL = `${backendUrl}/api/auth`;
 
 // Creating come default background color for profile pic or icon (inspired from google)
 const backgroundColorsList = [
@@ -48,9 +45,9 @@ const Login = () => {
         withCredentials: true, // Ensure cookies are included
       });
       localStorage.setItem("profile-bg-color", profileBgColor);
+      localStorage.setItem("token", response.data.token);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("email", response.data.email);
-      localStorage.setItem("profile-bg-color", profileBgColor);
       navigate("/"); // Redirect upon successful login
       return response.data;
     } catch (error) {
@@ -65,16 +62,11 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const data = await fetchLogin(user);
-    if (data) {
-      console.log("Login successful:", data);
-    } else {
-      console.log("Login failed");
-    }
   };
 
   return (
     <>
-      <div className="-mt-5 flex h-dvh w-screen items-center justify-center bg-slate-400 p-6 lg:h-screen">
+      <div className="flex h-dvh w-screen items-center justify-center bg-slate-400 p-6 lg:h-screen">
         <div className="flex h-fit w-80 gap-4 rounded-lg bg-white p-2 lg:h-4/5 lg:w-4/6 lg:rounded-2xl lg:p-4">
           <div className="hidden h-full w-1/2 flex-col justify-center gap-8 bg-slate-200 p-10 lg:flex">
             <span className="text-3xl font-semibold">Note Fusion</span>
@@ -84,19 +76,22 @@ const Login = () => {
                 Thoughts and Enhance Productivity.
               </h3>
               <p className="text-gray-600">
-                Our registration process is quick and easy, taking no more than
-                5 minutes to complete
+                Our log-in process is quick and easy, taking no more than 2
+                minutes to complete.
               </p>
             </div>
             <div className="h-2/5 w-full"></div>
           </div>
           <div className="h-full w-96 py-3 lg:w-1/2 lg:py-0">
             <form onSubmit={handleLogin}>
-              <div className="flex h-96 w-full flex-col gap-3 p-2 lg:h-full lg:p-8">
-                <div className="relative mb-4">
+              <div className="flex h-96 w-full flex-col gap-3 p-2 lg:h-full lg:p-4">
+                <div className="relative mb-2">
                   <h2 className="text-center text-3xl font-semibold text-gray-700 lg:mb-2 lg:text-start">
-                    Log in
+                    Login
                   </h2>
+                  <p className="text-center text-gray-500 lg:text-start">
+                    Get back to your account
+                  </p>
                 </div>
                 <div className="w-full">
                   <label
@@ -106,7 +101,7 @@ const Login = () => {
                     Username
                   </label>
                   <input
-                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-3 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="username"
                     type="text"
                     value={user.username}
@@ -123,7 +118,7 @@ const Login = () => {
                     Password
                   </label>
                   <input
-                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-3 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="password"
                     type="password"
                     value={user.password}
@@ -135,7 +130,7 @@ const Login = () => {
                 {/* Display error if any */}
                 {error && <p className="text-red-500">{error}</p>}{" "}
                 <button
-                  className="focus:shadow-outline rounded bg-blue-500 px-4 py-3 font-bold text-white hover:bg-blue-600 focus:outline-none"
+                  className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none"
                   type="submit"
                 >
                   Log in

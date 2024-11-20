@@ -31,10 +31,9 @@ const router = createBrowserRouter(
         <Route path="/profile" element={<Profile />} />
         <Route path="/sidebar" element={<Sidebar />} />
       </Route>
-
-      <Route path="/auth">
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
+      <Route path="/">
+        <Route path="/auth/login" element={<Login />} />
+        <Route path="/auth/register" element={<Register />} />
       </Route>
     </>
   )
@@ -43,6 +42,9 @@ const router = createBrowserRouter(
 const fetchData = async () => {
   const response = await axios.get(`${backendUrl}/api/notes`, {
     withCredentials: true,
+    headers: {
+      Authorization: localStorage.getItem("token"),
+    },
   });
   return response.data;
 };
