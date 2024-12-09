@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import db from "../config/db-config.js"
 
 const getAllNotes = async (req, res) => {
@@ -29,7 +30,8 @@ const getOneNote = async (req, res) => {
 
 const addNewNote = async (req, res) => {
     const { username } = req.user;
-    let { uid, description, created_at, is_important, is_complete } = req.body;
+    const uid = uuidv4();
+    let { description, created_at, is_important, is_complete } = req.body;
     const sql = ("INSERT INTO notes (uid, description, created_at, is_important, is_complete, username) VALUES (?, ?, ?, ?, ?, ?)");
 
     is_important = is_important ? 1 : 0;

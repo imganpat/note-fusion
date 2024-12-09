@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import URL from "../constants/backend_url";
-import backendUrl from "../constants/backend_url";
 
 // links object for navigation
 const linksObject = [
@@ -77,7 +76,7 @@ const Nav = () => {
           {/* Profile popup */}
           <div
             ref={profilePopupRef}
-            className="absolute right-4 top-12 z-20 flex hidden h-40 w-80 flex-col gap-2 rounded-lg bg-slate-50 px-4 py-5 shadow-lg"
+            className="absolute right-4 top-12 z-20 flex hidden h-40 w-64 flex-col gap-2 rounded-lg bg-slate-50 px-4 py-5 shadow-lg md:w-80"
           >
             <span className="font-semibold">Note Fusion</span>
 
@@ -98,7 +97,7 @@ const Nav = () => {
                   <span>{username[0]}</span>
                 </span>
               </div>
-              <div className="flex h-full w-2/3">
+              <div className="flex h-full md:w-2/3">
                 <div className="flex h-full w-full flex-col justify-center">
                   <span className="text-lg font-semibold">{username}</span>
                   <span className="-mt-1 text-sm text-gray-600">
@@ -121,14 +120,14 @@ const Nav = () => {
       </div>
 
       {/* Navigation links for mobile view only */}
-      <nav className="mx-4 my-2 flex gap-4 sm:hidden">
+      <nav className="mx-4 my-2 flex gap-4 text-sm sm:hidden">
         {linksObject.map((li) => {
           return (
             <div key={li.slug}>
               <NavLink
                 to={`${li.slug}`}
                 className={({ isActive }) => {
-                  return `flex h-10 cursor-pointer items-center rounded-full border-l-0 px-4 py-2 capitalize duration-200 hover:border hover:border-gray-500 sm:px-2 md:rounded-md ${isActive ? "bg-blue-900 text-white" : "bg-transparent"}`;
+                  return `flex h-10 cursor-pointer items-center rounded-full border-l-0 px-4 py-1 capitalize duration-200 hover:border hover:border-gray-500 sm:px-2 md:rounded-md ${isActive ? "bg-blue-900 text-white" : "bg-transparent"}`;
                 }}
               >
                 {li.name}

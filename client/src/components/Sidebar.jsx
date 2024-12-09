@@ -25,10 +25,12 @@ const Sidebar = () => {
     <>
       <div
         id="sidebar"
-        className="md:px- px- hidden h-full shadow-lg sm:block sm:w-40 md:w-64"
+        className="relative z-50 hidden h-full px-0 shadow-lg sm:block sm:w-40 md:w-64"
       >
         <div id="logo" className="flex h-20 w-full items-center">
-          <span className="text-2xl font-semibold md:mx-8">Note Fusion</span>
+          <span className="font-semibold sm:mx-4 sm:text-xl md:mx-8 md:text-2xl">
+            Note Fusion
+          </span>
         </div>
 
         <div id="menu" className="flex h-[85%] w-full flex-col justify-between">
@@ -39,7 +41,7 @@ const Sidebar = () => {
                   <NavLink
                     to={`${li.slug}`}
                     className={({ isActive }) => {
-                      return `hover:bg- flex h-10 w-full cursor-pointer items-center rounded-md rounded-r-full border px-2 py-2 capitalize duration-200 hover:border-gray-500 md:px-8 ${isActive ? "bg-blue-900 text-white" : "bg-transparent"}`;
+                      return `flex h-10 w-full cursor-pointer items-center rounded-md rounded-r-full border px-2 py-2 capitalize duration-200 hover:border-gray-500 sm:px-4 sm:text-sm ${isActive ? "bg-blue-900 text-white" : "bg-transparent"}`;
                     }}
                   >
                     {li.name}
@@ -53,7 +55,7 @@ const Sidebar = () => {
 
       <button
         id="create-btn"
-        className="absolute bottom-10 left-9 flex h-14 items-center justify-center rounded-md bg-blue-200 px-8"
+        className="absolute bottom-10 left-9 z-50 flex h-14 items-center justify-center rounded-md bg-blue-200 px-8"
         onClick={() => {
           dispatch(
             openPopUp({

@@ -1,17 +1,19 @@
 import jwt from "jsonwebtoken"
+import { v4 as uuidv4 } from 'uuid';
 import db from "../config/db-config.js";
 
 const registerPost = async (req, res) => {
-
-    // FIXME:
-    // user id should be created on backend not on frontend
-
-    const { userId, email, password, username } = req.body;
+    const userId = uuidv4();
+    const { email, password, username } = req.body;
     const sql = "INSERT INTO users (user_id, username, email, password ) VALUES (?, ?, ?, ?)";
 
     await db.query(sql, [userId, username, email, password], (err, result) => {
-        if (err)
-            res.status(500).send("Error registering user");
+        if (err) {
+            if (err.code === 'ER_DUP_ENTRY')
+                res.status(409).json({ message: "User already exists" });
+            else
+                res.status(500).json({ message: "Error registering user" });
+        }
         else
             res.status(201).json({ message: "Registration successfull" });
     });

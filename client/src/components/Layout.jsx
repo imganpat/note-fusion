@@ -17,7 +17,7 @@ const Layout = () => {
 
   return (
     <>
-      <main className="relative flex h-screen w-screen">
+      <main className="relative flex h-dvh w-screen">
         <div className="">
           <Sidebar />
         </div>
