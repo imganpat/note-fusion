@@ -42,7 +42,7 @@ const Register = () => {
   return (
     <>
       <div className="flex h-dvh w-screen items-center justify-center bg-slate-400 p-6 lg:h-screen">
-        <div className="flex h-[95%] w-80 gap-4 rounded-lg bg-white p-2 lg:h-4/5 lg:w-4/6 lg:rounded-2xl lg:p-4">
+        <div className="flex h-fit w-80 gap-4 rounded-lg bg-white p-2 pb-12 lg:h-4/5 lg:w-4/6 lg:rounded-2xl lg:p-4">
           <div className="hidden h-full w-1/2 flex-col justify-center gap-8 bg-slate-200 p-10 lg:flex">
             <span className="text-3xl font-semibold">Note Fusion</span>
             <div className="flex w-full flex-col gap-4">
@@ -132,7 +132,7 @@ const Register = () => {
                 >
                   Sign Up
                 </button>
-                <p className="mt-3 text-center">
+                <p className="mt- text-center">
                   Already have an account?{" "}
                   <strong className="cursor-pointer text-blue-500">
                     <Link to={"/auth/login"}> Login </Link>

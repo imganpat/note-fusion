@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { nanoid } from "@reduxjs/toolkit";
 import { addNewNote, editNote } from "../store/slices/NotesSlice.jsx";
 import { closePopUp } from "../store/slices/PopupSlice.jsx";
 import CancelIcon from "../../public/assets/svgs/CancelIcon.jsx";
@@ -32,7 +31,6 @@ const Input = () => {
 
   const { isEditing, currentNote } = useSelector((state) => state.popup); // getting isEditing and currentNote from popup slice
 
-  const [uid, setUid] = useState(isEditing ? currentNote.uid : nanoid()); //generating unique id for note if not editing else using the currentNote uid
   const [description, setDescription] = useState(
     // setting description to currentNote description if editing else empty string
     currentNote?.description || ""
@@ -57,7 +55,6 @@ const Input = () => {
 
   useEffect(() => {
     if (isEditing) {
-      setUid(currentNote.uid); // Ensure uid remains unchanged
       setDescription(currentNote.description);
       setIsImportant(currentNote.is_important);
     }
@@ -69,13 +66,17 @@ const Input = () => {
     );
   }, [isEditing, currentNote]);
 
+  document.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") dispatch(closePopUp());
+  });
+
   const handleAddOrUpdateNote = () => {
     const date = new Date();
     const monthName = months[date.getMonth()]; // Getting the month name from the months array using the month index like 0 for Jan, 1 for Feb, etc.
     const noteDate = `${monthName} ${date.getDate()}, ${date.getFullYear()}`; // Creating the date in the format like Jan 1, 2022
 
     const note = {
-      uid,
+      uid: isEditing ? currentNote.uid : null, // If editing, keep the current uid else set to null
       description,
       created_at: isEditing ? currentNote.created_at : noteDate, // If editing, keep the current created_at date else set the new date
       is_important,
@@ -83,11 +84,8 @@ const Input = () => {
       username,
     };
 
-    if (isEditing) {
-      dispatch(editNote(note));
-    } else {
-      dispatch(addNewNote(note));
-    }
+    if (isEditing) dispatch(editNote(note));
+    else dispatch(addNewNote(note));
 
     dispatch(closePopUp());
   };

@@ -11,7 +11,7 @@ const NotesContainer = () => {
       <div className="flex flex-wrap justify-start gap-4 p-8">
         {/* Checking if the notes are present or not */}
         {note.length <= 0 ? (
-          <h1 className="col-span-5 text-2xl text-blue-600">
+          <h1 className="text-2xl text-blue-600">
             Your notes will appear here
           </h1>
         ) : (

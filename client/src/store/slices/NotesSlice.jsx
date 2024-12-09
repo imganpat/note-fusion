@@ -54,7 +54,7 @@ const noteSlice = createSlice({
     },
 
     editNote(state, action) {
-      const currentUid = action.payload.uid;
+      const currentUid = action.payload.uid
       const newDesc = action.payload.description;
       const newImp = action.payload.is_important;
       const username = action.payload.username;
