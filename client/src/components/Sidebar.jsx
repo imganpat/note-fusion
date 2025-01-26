@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { openPopUp } from "../store/slices/PopupSlice";
+import { openPopUp } from "../store/slices/popup_slice.js";
 import AddIcon from "../../public/assets/svgs/AddIcon";
 
 const linksObject = [

@@ -11,7 +11,7 @@ const initialState = {
   currentNote: {},
 };
 
-const noteSlice = createSlice({
+const NoteSlice = createSlice({
   name: "notes",
   initialState,
   reducers: {
@@ -54,7 +54,7 @@ const noteSlice = createSlice({
     },
 
     editNote(state, action) {
-      const currentUid = action.payload.uid
+      const currentUid = action.payload.uid;
       const newDesc = action.payload.description;
       const newImp = action.payload.is_important;
       const username = action.payload.username;
@@ -95,7 +95,7 @@ const noteSlice = createSlice({
   },
 });
 
-export default noteSlice;
+export default NoteSlice;
 
 export const {
   initNotes,
@@ -104,4 +104,4 @@ export const {
   toogleCompletion,
   editNote,
   deleteNote,
-} = noteSlice.actions;
+} = NoteSlice.actions;

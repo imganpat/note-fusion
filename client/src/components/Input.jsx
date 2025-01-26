@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { addNewNote, editNote } from "../store/slices/NotesSlice.jsx";
-import { closePopUp } from "../store/slices/PopupSlice.jsx";
-import CancelIcon from "../../public/assets/svgs/CancelIcon.jsx";
+import { addNewNote, editNote } from "../store/slices/notes_slice.js";
+import { closePopUp } from "../store/slices/popup_slice.js";
+import CancelIcon from "../../public/assets/svgs/CancelIcon";
 
 const user = localStorage.getItem("username"); // getting username from local storage
 

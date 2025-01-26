@@ -104,9 +104,13 @@ const Login = () => {
                     className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="username"
                     type="text"
+                    placeholder="e.g. jhon123"
                     value={user.username}
                     onChange={(e) =>
-                      setUser({ ...user, username: e.target.value })
+                      setUser({
+                        ...user,
+                        username: e.target.value.trim().toLowerCase(),
+                      })
                     }
                   />
                 </div>
