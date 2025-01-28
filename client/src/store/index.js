@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import noteSlice from "./slices/NotesSlice";
-import PopUpSlide from "./slices/PopupSlice";
+import NoteSlice from "./slices/notes_slice.js";
+import PopUpSlide from "./slices/popup_slice.js";
 
 const store = configureStore({
   reducer: {
-    notes: noteSlice.reducer,
+    notes: NoteSlice.reducer,
     popup: PopUpSlide.reducer,
   },
 });

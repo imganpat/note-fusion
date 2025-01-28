@@ -4,7 +4,7 @@ import {
   toogleImportance,
   toogleCompletion,
   deleteNote,
-} from "../store/slices/NotesSlice";
+} from "../store/slices/notes_slice.js";
 import {
   MenuIcon,
   CancelIcon,
@@ -15,8 +15,8 @@ import {
   DisableCheckIcon,
   DeleteIcon,
   StarIcon,
-} from "..//../public/assets/svgs/index.jsx";
-import { openPopUp } from "../store/slices/PopupSlice.jsx";
+} from "../../public/assets/svgs/index.jsx";
+import { openPopUp } from "../store/slices/popup_slice.js";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 

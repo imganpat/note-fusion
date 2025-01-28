@@ -80,6 +80,7 @@ const Register = () => {
                     id="email"
                     type="email"
                     required
+                    placeholder="e.g. example@gmail.com"
                     value={user.email}
                     onChange={(e) => {
                       setUser({ ...user, email: e.target.value });
@@ -98,9 +99,13 @@ const Register = () => {
                     id="username"
                     type="text"
                     required
+                    placeholder="e.g. jhon123"
                     value={user.username}
                     onChange={(e) => {
-                      setUser({ ...user, username: e.target.value });
+                      setUser({
+                        ...user,
+                        username: e.target.value.trim().toLowerCase(),
+                      });
                     }}
                   />
                 </div>

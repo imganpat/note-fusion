@@ -6,7 +6,7 @@ import CompletedNotes from "./components/CompletedNotes";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { initNotes } from "./store/slices/NotesSlice";
+import { initNotes } from "./store/slices/notes_slice.js";
 import { Tooltip } from "react-tooltip";
 import {
   Route,
