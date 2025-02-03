@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     // host: '192.168.69.84',
+    // open: true,
     historyApiFallback: true,
   }
 })
