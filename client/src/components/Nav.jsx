@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import URL from "../constants/backend_url";
+import { clearAllNotes } from "../store/slices/notes_slice";
+import { useDispatch } from "react-redux";
 
 // links object for navigation
 const linksObject = [
@@ -21,6 +23,7 @@ const linksObject = [
 
 const Nav = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const profilePopupRef = useRef(); // profile popup ref for toggling visibility of profile popup on clicking profile icon
 
   const [username, setUsername] = useState(
@@ -41,6 +44,7 @@ const Nav = () => {
     await axios.get(`${URL}/api/auth/logout`, {
       withCredentials: true,
     });
+    dispatch(clearAllNotes());
     localStorage.clear("username");
     localStorage.clear("email");
     localStorage.clear("profile-bg-color");
@@ -49,6 +53,10 @@ const Nav = () => {
 
   document.addEventListener("keydown", (e) => {
     if (e.key == "Escape") profilePopupRef.current.classList.add("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    profilePopupRef.current.classList.add("hidden");
   });
 
   return (
@@ -64,7 +72,8 @@ const Nav = () => {
           {username && (
             <span
               className={`mr-4 grid h-10 w-10 cursor-pointer place-items-center rounded-full ${profileBgColor} text-lg font-semibold text-white`}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 profilePopupRef.current.classList.toggle("hidden"); // toggling visibility of profile popup on clicking profile icon
               }}
             >
@@ -105,7 +114,7 @@ const Nav = () => {
                   </span>
                   <NavLink
                     to={"/profile"}
-                    className="mt-1 cursor-pointer text-sm text-gray-600 hover:text-blue-700 hover:underline"
+                    className="mt-1 w-fit cursor-pointer text-sm text-gray-600 hover:text-blue-700 hover:underline"
                     onClick={() =>
                       profilePopupRef.current.classList.toggle("hidden")
                     }

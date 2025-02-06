@@ -3,10 +3,7 @@ import NotesContainer from "./components/NotesContainer";
 import Input from "./components/Input";
 import ImportantNotes from "./components/ImportantNotes";
 import CompletedNotes from "./components/CompletedNotes";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { initNotes } from "./store/slices/notes_slice.js";
+import { useSelector } from "react-redux";
 import { Tooltip } from "react-tooltip";
 import {
   Route,
@@ -15,7 +12,6 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import Layout from "./components/Layout";
-import backendUrl from "./constants/backend_url";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./components/Profile";
@@ -39,29 +35,8 @@ const router = createBrowserRouter(
   )
 );
 
-const fetchData = async () => {
-  const response = await axios.get(`${backendUrl}/api/notes`, {
-    withCredentials: true,
-    headers: {
-      Authorization: localStorage.getItem("token"),
-    },
-  });
-  return response.data;
-};
-
-// Function to initialize the store woth the user notes
-const fetchDataAndDispatch = async (dispatch) => {
-  let apiData = await fetchData();
-  dispatch(initNotes(apiData));
-};
-
 function App() {
-  const dispatch = useDispatch();
   const isPopUpOpen = useSelector((state) => state.popup.isPopupOpen);
-
-  useEffect(() => {
-    fetchDataAndDispatch(dispatch);
-  }, [dispatch]);
 
   return (
     <>

@@ -19,6 +19,10 @@ const NoteSlice = createSlice({
       state.notes.push(...action.payload);
     },
 
+    clearAllNotes(state) {
+      state.notes = [];
+    },
+
     addNewNote(state, action) {
       state.notes.push(action.payload);
       axios.post(`${URL}/add`, action.payload, {
@@ -99,6 +103,7 @@ export default NoteSlice;
 
 export const {
   initNotes,
+  clearAllNotes,
   addNewNote,
   toogleImportance,
   toogleCompletion,
