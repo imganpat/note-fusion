@@ -16,9 +16,9 @@ const getAllNotes = async (req, res) => {
 
 const getOneNote = async (req, res) => {
     const uid = req.params.uid;
-    const { username } = req.user
-    const sql = "SELECT * FROM notes WHERE uid = ? AND username = ?";
-    await db.query(sql, [uid, username], (err, rows) => {
+    // const { username } = req.user;
+    const sql = "SELECT * FROM notes WHERE uid = ?";
+    await db.query(sql, [uid], (err, rows) => {
         try {
             res.status(200).json(rows)
         } catch (err) {

@@ -55,7 +55,7 @@ const Sidebar = () => {
 
       <button
         id="create-btn"
-        className="absolute bottom-10 left-9 z-50 flex h-14 items-center justify-center rounded-md bg-blue-200 px-8"
+        className="absolute bottom-10 left-9 z-50 flex h-14 items-center justify-center rounded-md border border-transparent bg-blue-200 px-8 transition-all hover:border-blue-500"
         onClick={() => {
           dispatch(
             openPopUp({

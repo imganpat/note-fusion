@@ -7,6 +7,7 @@ import CheckIcon from "./CheckIcon";
 import DisableCheckIcon from "./DisableCheckIcon";
 import DeleteIcon from "./DeleteIcon";
 import StarIcon from "./StarIcon";
+import CopyLinkIcon from "./CopyLinkIcon";
 
 export {
   MenuIcon,
@@ -18,4 +19,5 @@ export {
   DisableCheckIcon,
   DeleteIcon,
   StarIcon,
+  CopyLinkIcon,
 };

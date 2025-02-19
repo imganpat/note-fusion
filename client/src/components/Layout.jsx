@@ -18,9 +18,18 @@ const fetchData = async () => {
 };
 
 // Function to initialize the store woth the user notes
-const fetchDataAndDispatch = async (dispatch) => {
-  let apiData = await fetchData();
-  dispatch(initNotes(apiData));
+const fetchDataAndDispatch = async (dispatch, navigate) => {
+  try {
+    let apiData = await fetchData();
+    dispatch(initNotes(apiData));
+  } catch (error) {
+    // If token is expired or unauthorized then remove it and redirect to login
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      navigate("/auth/login");
+    }
+  }
 };
 
 const Layout = () => {
@@ -29,16 +38,13 @@ const Layout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!username) {
+    const path = window.location.pathname;
+    if (!localStorage.getItem("token") && !path.startsWith("/note/")) {
       navigate("/auth/login");
-    } else {
-      navigate("/");
+    } else if (localStorage.getItem("token")) {
+      fetchDataAndDispatch(dispatch, navigate);
     }
-  }, [username, navigate]);
-
-  useEffect(() => {
-    fetchDataAndDispatch(dispatch);
-  }, [dispatch]);
+  }, [username, navigate, dispatch]);
 
   return (
     <>

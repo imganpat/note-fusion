@@ -6,8 +6,6 @@ import { addNewNote, editNote } from "../store/slices/notes_slice.js";
 import { closePopUp } from "../store/slices/popup_slice.js";
 import CancelIcon from "../../public/assets/svgs/CancelIcon";
 
-const user = localStorage.getItem("username"); // getting username from local storage
-
 const months = [
   "Jan",
   "Feb",
@@ -23,6 +21,35 @@ const months = [
   "Dec",
 ];
 
+const handleAddOrUpdateNote = (
+  dispatch,
+  isEditing,
+  currentNote,
+  description,
+  is_important,
+  is_completed,
+  username
+) => {
+  const date = new Date();
+  const monthName = months[date.getMonth()]; // Getting the month name from the months array using the month index like 0 for Jan, 1 for Feb, etc.
+  const noteDate = `${monthName} ${date.getDate()}, ${date.getFullYear()}`; // Creating the date in the format like Jan 1, 2022
+
+  const note = {
+    uid: isEditing ? currentNote.uid : null, // If editing, keep the current uid else set to null
+    description,
+    created_at: isEditing ? currentNote.created_at : noteDate, // If editing, keep the current created_at date else set the new date
+    is_important,
+    is_completed,
+    username,
+  };
+
+  if (isEditing) dispatch(editNote(note));
+  else dispatch(addNewNote(note));
+
+  dispatch(closePopUp());
+  console.log(note);
+};
+
 const Input = () => {
   const dispatch = useDispatch();
 
@@ -35,14 +62,14 @@ const Input = () => {
     // setting description to currentNote description if editing else empty string
     currentNote?.description || ""
   );
-  const [created_at, setCreated_at] = useState(currentNote?.created_at || ""); // setting created_at to currentNote created_at if editing else empty string
+
   const [is_important, setIsImportant] = useState(
     currentNote?.is_important || false // setting is_important to currentNote is_important if editing else false
   );
   const [is_completed, setIsCompleted] = useState(
     currentNote?.is_completed || false // setting is_completed to currentNote is_completed if editing else false
   );
-  const [username, setUsername] = useState(user); // setting username to user
+  const username = localStorage.getItem("username"); // getting username from local storage
 
   useGSAP(() => {
     // Animating the popup
@@ -51,44 +78,31 @@ const Input = () => {
       { opacity: 0, scale: 0.8 }, // Initial state
       { opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" } // Final state
     );
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (isEditing) {
       setDescription(currentNote.description);
       setIsImportant(currentNote.is_important);
     }
-    inputRef.current.focus(); // Focusing on the input field when the popup is opened
-    // Setting the cursor at the end of the input field when editing
-    inputRef.current.setSelectionRange(
-      inputRef.current.value.length,
-      inputRef.current.value.length
-    );
+    if (inputRef.current) {
+      inputRef.current.focus(); // Focusing on the input field when the popup is opened
+      //     // Setting the cursor at the end of the input field when editing
+      inputRef.current.setSelectionRange(
+        inputRef.current.value.length,
+        inputRef.current.value.length
+      );
+    }
   }, [isEditing, currentNote]);
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key == "Escape") dispatch(closePopUp());
-  });
-
-  const handleAddOrUpdateNote = () => {
-    const date = new Date();
-    const monthName = months[date.getMonth()]; // Getting the month name from the months array using the month index like 0 for Jan, 1 for Feb, etc.
-    const noteDate = `${monthName} ${date.getDate()}, ${date.getFullYear()}`; // Creating the date in the format like Jan 1, 2022
-
-    const note = {
-      uid: isEditing ? currentNote.uid : null, // If editing, keep the current uid else set to null
-      description,
-      created_at: isEditing ? currentNote.created_at : noteDate, // If editing, keep the current created_at date else set the new date
-      is_important,
-      is_completed,
-      username,
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") dispatch(closePopUp());
     };
 
-    if (isEditing) dispatch(editNote(note));
-    else dispatch(addNewNote(note));
-
-    dispatch(closePopUp());
-  };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [dispatch]);
 
   return (
     <div className="flex items-center justify-center overflow-hidden rounded-lg">
@@ -139,8 +153,18 @@ const Input = () => {
           </div>
 
           <button
-            className="flex h-10 items-center justify-center bg-blue-500 px-12 py-4 text-blue-50"
-            onClick={handleAddOrUpdateNote}
+            className="flex h-10 items-center justify-center bg-blue-500 px-12 py-4 text-blue-50 transition-all hover:bg-blue-600"
+            onClick={() =>
+              handleAddOrUpdateNote(
+                dispatch,
+                isEditing,
+                currentNote,
+                description,
+                is_important,
+                is_completed,
+                username
+              )
+            }
           >
             {/* If editing, show "Update" else show "Add" to the button */}
             {isEditing ? "Update" : "Add"}
