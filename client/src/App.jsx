@@ -15,7 +15,7 @@ import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./components/Profile";
-import Sidebar from "./components/Sidebar";
+import Note from "./components/Note";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,9 +23,9 @@ const router = createBrowserRouter(
       <Route path="/" element={<Layout />}>
         <Route path="" element={<NotesContainer />} />
         <Route path="/imp" element={<ImportantNotes />} />
+        <Route path="/note/:uid" element={<Note />} />
         <Route path="/complete" element={<CompletedNotes />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/sidebar" element={<Sidebar />} />
       </Route>
       <Route path="/">
         <Route path="/auth/login" element={<Login />} />
@@ -42,10 +42,31 @@ function App() {
     <>
       <RouterProvider router={router}></RouterProvider>
       {isPopUpOpen && <Input />}
-      <Tooltip id="edit-btn" place="top" content="Edit note" />
-      <Tooltip id="mark-imp-btn" place="top" content="Toogle importance" />
-      <Tooltip id="mark-com-btn" place="bottom" content="Toogle completion" />
-      <Tooltip id="del-btn" place="bottom" content="Delete note" />
+      <Tooltip className="z-50" id="edit-btn" place="top" content="Edit note" />
+      <Tooltip
+        className="z-50"
+        id="mark-imp-btn"
+        place="top"
+        content="Toogle importance"
+      />
+      <Tooltip
+        className="z-50"
+        id="mark-com-btn"
+        place="bottom"
+        content="Toogle completion"
+      />
+      <Tooltip
+        className="z-50"
+        id="del-btn"
+        place="bottom"
+        content="Delete note"
+      />
+      <Tooltip
+        className="z-50"
+        id="copy-link-btn"
+        place="bottom"
+        content="Copy url"
+      />
     </>
   );
 }

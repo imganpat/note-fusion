@@ -1,187 +1,184 @@
-import React, { useRef, useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import backendUrl from "../constants/backend_url";
 import {
-  toogleImportance,
-  toogleCompletion,
-  deleteNote,
-} from "../store/slices/notes_slice.js";
-import {
-  MenuIcon,
-  CancelIcon,
-  EditIcon,
-  ImpIcon,
-  DisableImpIcon,
   CheckIcon,
-  DisableCheckIcon,
+  CopyLinkIcon,
   DeleteIcon,
+  DisableCheckIcon,
+  DisableImpIcon,
+  ImpIcon,
   StarIcon,
-} from "../../public/assets/svgs/index.jsx";
-import { openPopUp } from "../store/slices/popup_slice.js";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
+} from "../../public/assets/svgs/index";
+import {
+  deleteNote,
+  editNote,
+  toogleCompletion,
+  toogleImportance,
+} from "../store/slices/notes_slice";
 
-const Note = ({ noteData }) => {
-  const dispatch = useDispatch();
-  const menuBtnRef = useRef();
-  const menuRef = useRef();
-  const noteRef = useRef(null);
-  const utilityBtnRefs = useRef([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  utilityBtnRefs.current = [];
-
-  // Function to add elements to the utilityBtnRefs array for animation purposes using of menu buttons
-  const addToRefs = (el) => {
-    if (el && !utilityBtnRefs.current.includes(el)) {
-      utilityBtnRefs.current.push(el);
-    }
-  };
-
-  useGSAP(() => {
-    // Animating the note on load
-    gsap.timeline().from(noteRef.current, {
-      duration: 1,
-      opacity: 0,
-      y: 50,
-      ease: "power3.out",
+const fetchNote = async (
+  uid,
+  setNote,
+  setImportant,
+  setComplete,
+  setIsOwner,
+  navigate
+) => {
+  try {
+    const response = await axios.get(`${backendUrl}/api/notes/${uid}`, {
+      withCredentials: true,
     });
-  });
+    setNote(response.data[0]);
+    setImportant(response.data[0].is_important); // use to toggle the importance icon in real-time
+    setComplete(response.data[0].is_complete); // use to toggle the completion icon in real-time
 
-  // Function to animate the menu buttons on toggle
-  const toggleAnimation = () => {
-    if (!menuRef.current.classList.contains("hidden")) {
-      gsap.from(utilityBtnRefs.current, {
-        duration: 0.5,
-        opacity: 0,
-        x: 20,
-        stagger: 0.03,
-        ease: "elastic",
-        clear: "opacity, x",
-      });
-    }
-  };
+    // check if the note is created by the current user or not
+    if (response.data[0].username !== localStorage.getItem("username"))
+      //if yes then set isOwner to true which will enable the edit functionality and delete button
+      setIsOwner(false);
+  } catch (error) {
+    console.error("This note does not exist");
+    navigate("/");
+  }
+};
 
-  // Function to toggle the menu
-  const toggleMenu = () => {
-    menuRef.current.classList.toggle("hidden");
-    setIsMenuOpen(!isMenuOpen);
-    toggleAnimation();
-  };
+const handelEdit = async (e, note, dispatch) => {
+  // wait for 3 seconds which reduces the api calls and updates the note after the user stops typing
+  setTimeout(() => {
+    note.description = e.target.innerText;
+    dispatch(editNote(note));
+  }, 3000);
+};
+
+const handleDelete = async (dispatch, note, navigate) => {
+  await dispatch(deleteNote(note));
+  navigate("/");
+};
+
+const handleCopyUrl = () => {
+  // copy the current url to the clipboard
+  const url = window.location.href;
+  navigator.clipboard.writeText(url);
+};
+
+const Note = () => {
+  const { uid } = useParams();
+  const [note, setNote] = useState({});
+  const [isOwner, setIsOwner] = useState(true);
+  const [important, setImportant] = useState(false);
+  const [complete, setComplete] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchNote(uid, setNote, setImportant, setComplete, setIsOwner, navigate);
+  }, [uid]);
 
   return (
-    <>
-      <div
-        ref={noteRef}
-        id="noteRef"
-        className={`relative h-28 w-36 rounded px-2 py-1 text-sm sm:h-36 sm:w-44 md:h-52 md:w-64 md:rounded-xl md:px-5 md:pb-1 md:pt-4 md:text-base ${noteData.is_complete ? "bg-blue-50 line-through" : "bg-blue-100"}`}
-      >
-        <div id="note-desc" className="h-3/4 text-blue-900">
-          <p className="line-clamp-5">{noteData.description}</p>
-        </div>
-
-        {/* Displaying star icon if note is important */}
-        {noteData.is_important != 0 && (
-          <div className="absolute right-2 top-1 md:right-5 md:top-3">
+    <div className="absolute left-0 top-0 z-50 flex h-dvh w-screen flex-col items-center bg-black bg-opacity-50 py-2 sm:py-6 md:py-8 lg:py-8">
+      <div className="relative flex w-11/12 flex-grow flex-col overflow-y-auto overflow-x-hidden rounded-lg bg-gray-100 shadow lg:w-2/3">
+        {important != 0 && (
+          <div className="absolute right-2 top-1 z-auto md:right-5 md:top-3">
             <StarIcon />
           </div>
         )}
-
-        <div className="relative flex h-1/4 w-full items-center justify-between text-sm">
-          <div id="creation-date" className="text-blue-900">
-            {noteData.created_at}
+        <div className="scrollbar flex flex-grow flex-col overflow-y-auto p-4">
+          <div className="flex flex-grow flex-col">
+            <pre
+              className={`flex-grow text-wrap font-sans outline-none ${complete ? "line-through" : ""}`}
+              contentEditable={isOwner}
+              onKeyUp={(e) => handelEdit(e, note, dispatch)}
+            >
+              {note.description}
+            </pre>
+            <span className="max-h-fit self-end text-sm">
+              Created {!isOwner ? note.username : ""} on {note.created_at}
+            </span>
           </div>
+        </div>
 
-          <div
-            ref={menuBtnRef}
-            id="edit-btn"
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-            onClick={() => toggleMenu()}
-          >
-            {/* Ternary operator to display menu icon or cancel icon based on the state of the menu */}
-            {!isMenuOpen ? <MenuIcon /> : <CancelIcon />}
-          </div>
+        {/* note button bar */}
+        <div className="sticky bottom-0 flex h-14 w-full items-center border-t p-4">
+          <div className="flex w-full justify-between">
+            {isOwner ? (
+              <>
+                <div className="flex">
+                  <div
+                    data-tooltip-id="mark-imp-btn"
+                    className="cursor-pointer rounded-full border border-transparent p-2 hover:border-neutral-500"
+                    onClick={() => {
+                      dispatch(toogleImportance(note));
+                      setImportant((prev) => !prev);
+                    }}
+                  >
+                    {!important ? (
+                      <ImpIcon color={"#000"} />
+                    ) : (
+                      <DisableImpIcon color={"#000"} />
+                    )}
+                  </div>
+                  <div
+                    data-tooltip-id="mark-com-btn"
+                    className="cursor-pointer rounded-full border border-transparent p-2 hover:border-neutral-500"
+                    onClick={() => {
+                      dispatch(toogleCompletion(note));
+                      setComplete((prev) => !prev);
+                    }}
+                  >
+                    {!complete ? (
+                      <CheckIcon color={"#000"} />
+                    ) : (
+                      <DisableCheckIcon color={"#000"} />
+                    )}
+                  </div>
+                  <div
+                    data-tooltip-id="del-btn"
+                    className="cursor-pointer rounded-full border border-transparent p-2 hover:border-neutral-500"
+                    onClick={() => handleDelete(dispatch, note, navigate)}
+                  >
+                    <DeleteIcon color={"#000"} />
+                  </div>
+                  <div
+                    data-tooltip-id="copy-link-btn"
+                    className="cursor-pointer rounded-full border border-transparent p-2 hover:border-neutral-500"
+                    onClick={handleCopyUrl}
+                  >
+                    <CopyLinkIcon color={"#000"} />
+                  </div>
+                </div>
 
-          <div
-            ref={menuRef}
-            className="absolute right-9 flex hidden h-20 w-20 flex-wrap justify-end gap-1 md:h-fit md:w-fit md:flex-nowrap"
-          >
-            {/* edit btn */}
+                {/*Close button  */}
 
-            <div
-              data-tooltip-id="edit-btn"
-              ref={addToRefs}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-              onClick={() => {
-                dispatch(
-                  openPopUp({
-                    isEditing: true,
-                    currentNote: {
-                      uid: noteData.uid,
-                      description: noteData.description,
-                      is_important: noteData.is_important,
-                    },
-                  })
-                );
-                toggleMenu();
-              }}
-            >
-              <EditIcon />
-            </div>
-
-            {/* Toogle importance btn */}
-
-            <div
-              data-tooltip-id="mark-imp-btn"
-              ref={addToRefs}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-              onClick={() => {
-                dispatch(toogleImportance(noteData));
-                toggleMenu();
-              }}
-            >
-              {!noteData.is_important ? <ImpIcon /> : <DisableImpIcon />}
-            </div>
-
-            {/* Toogle completion btn */}
-
-            <div
-              data-tooltip-id="mark-com-btn"
-              ref={addToRefs}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-              onClick={() => {
-                dispatch(toogleCompletion(noteData));
-                toggleMenu();
-              }}
-            >
-              {!noteData.is_complete ? <CheckIcon /> : <DisableCheckIcon />}
-            </div>
-
-            {/* Deletion btn */}
-
-            <div
-              data-tooltip-id="del-btn"
-              ref={addToRefs}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-              onClick={() => {
-                gsap.to(noteRef.current, {
-                  opacity: 0,
-                  scale: 0.9,
-                  left: 50,
-                  duration: 0.3,
-                  display: "none",
-                  onComplete: () => {
-                    dispatch(deleteNote(noteData));
-                    toggleMenu();
-                  },
-                });
-              }}
-            >
-              <DeleteIcon />
-            </div>
+                {/* Is the current user is the creator of the note then display close button else not */}
+                <div className="flex items-center">
+                  <Link
+                    to={"/"}
+                    className="rounded border-2 bg-white px-6 py-2 duration-100 hover:bg-gray-100"
+                  >
+                    Close
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <span />
+                <Link
+                  to={"/auth/login"}
+                  className="text-blue-600 hover:text-blue-500"
+                >
+                  Want to create your own note?
+                </Link>
+                <span />
+              </>
+            )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

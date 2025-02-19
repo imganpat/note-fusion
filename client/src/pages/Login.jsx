@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../constants/backend_url.js";
 
@@ -37,6 +37,14 @@ const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({ username: "", password: "" });
   const [error, setError] = useState(""); // State to handle errors
+
+  // check if alredy logged in
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (localStorage.getItem("token") && !path.startsWith("/note/")) {
+      navigate("/");
+    }
+  });
 
   // Function to handle login request
   const fetchLogin = async (user) => {

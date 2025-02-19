@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.get("/", isAuthenticated, notesController.getAllNotes)
 
+router.get("/:uid", notesController.getOneNote)
+
 router.post("/add", isAuthenticated, notesController.addNewNote)
 
 router.put("/imp/:uid", isAuthenticated, notesController.toogleImportance)

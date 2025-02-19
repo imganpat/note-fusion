@@ -31,7 +31,7 @@ const loginPost = async (req, res) => {
 
             if (rows && rows.length > 0) {
                 const user = rows[0];
-                const token = jwt.sign({ username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" })
+                const token = jwt.sign({ username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: "7d" })
                 res.status(200).json({ message: "Login successful", token, username: user.username, email: user.email });
             } else {
                 res.status(401).json({ message: "Invalid username or password" });
