@@ -16,7 +16,7 @@ import {
   DisableCheckIcon,
   DeleteIcon,
   StarIcon,
-  CopyLinkIcon,
+  ShareIcon,
 } from "../../public/assets/svgs/index.jsx";
 import { openPopUp } from "../store/slices/popup_slice.js";
 import { gsap } from "gsap";
@@ -69,6 +69,19 @@ const Note = ({ noteData }) => {
     menuRef.current.classList.toggle("hidden");
     setIsMenuOpen(!isMenuOpen);
     toggleAnimation();
+  };
+
+  const handleShare = async (e, uid) => {
+    e.preventDefault();
+    if (navigator.share)
+      try {
+        await navigator.share({
+          url: `${window.location.href + "note/" + uid}`, // adding the note/note_id in the url.
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    else alert("Sharing is not supported on this browser.");
   };
 
   return (
@@ -186,20 +199,14 @@ const Note = ({ noteData }) => {
               <DeleteIcon />
             </div>
 
-            {/* Copy Link button */}
+            {/* Share button */}
             <div
-              data-tooltip-id="copy-link-btn"
+              data-tooltip-id="share-btn"
               ref={addToRefs}
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-              onClick={(e) => {
-                e.preventDefault(); // Prevent navigation
-                navigator.clipboard.writeText(
-                  `${window.location.origin}/note/${noteData.uid}`
-                );
-                toggleMenu(e);
-              }}
+              onClick={(e) => handleShare(e, noteData.uid)}
             >
-              <CopyLinkIcon />
+              <ShareIcon />
             </div>
           </div>
         </div>
