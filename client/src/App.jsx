@@ -61,12 +61,7 @@ function App() {
         place="bottom"
         content="Delete note"
       />
-      <Tooltip
-        className="z-50"
-        id="copy-link-btn"
-        place="bottom"
-        content="Copy url"
-      />
+      <Tooltip className="z-50" id="share-btn" place="bottom" content="Share" />
     </>
   );
 }
