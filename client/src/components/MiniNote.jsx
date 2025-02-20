@@ -94,7 +94,7 @@ const Note = ({ noteData }) => {
         }`}
       >
         <div id="note-desc" className="h-3/4 text-blue-900">
-          <p className="line-clamp-5">{noteData.description}</p>
+          <p className="md:line-clamp-5">{noteData.description}</p>
         </div>
 
         {/* Displaying star icon if note is important */}
