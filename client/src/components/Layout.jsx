@@ -52,9 +52,11 @@ const Layout = () => {
         <div className="">
           <Sidebar />
         </div>
-        <div className="flex flex-1 flex-col">
-          <Nav />
-          <div className="flex flex-1 overflow-y-scroll">
+        <div className="flex flex-grow flex-col">
+          <div className="flex flex-col">
+            <Nav />
+          </div>
+          <div className="overflow-y-scroll">
             <Outlet />
           </div>
         </div>

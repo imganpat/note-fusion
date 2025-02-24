@@ -9,6 +9,7 @@ const initialState = {
   isPopupOpen: false,
   isEditing: false,
   currentNote: {},
+  hasAnimated: false,
 };
 
 const NoteSlice = createSlice({
@@ -96,6 +97,10 @@ const NoteSlice = createSlice({
         },
       });
     },
+
+    markAnimated: (state) => {
+      state.hasAnimated = true;
+    },
   },
 });
 
@@ -109,4 +114,5 @@ export const {
   toogleCompletion,
   editNote,
   deleteNote,
+  markAnimated
 } = NoteSlice.actions;
