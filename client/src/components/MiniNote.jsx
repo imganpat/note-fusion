@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   toogleImportance,
   toogleCompletion,
   deleteNote,
+  markAnimated,
 } from "../store/slices/notes_slice.js";
 import {
   MenuIcon,
@@ -29,6 +30,7 @@ const Note = ({ noteData }) => {
   const noteRef = useRef(null);
   const utilityBtnRefs = useRef([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hasAnimated = useSelector((state) => state.notes.hasAnimated);
 
   utilityBtnRefs.current = [];
 
@@ -41,13 +43,16 @@ const Note = ({ noteData }) => {
 
   // Animating the note on load
   useGSAP(() => {
-    gsap.timeline().from(noteRef.current, {
-      duration: 1,
-      opacity: 0,
-      y: 50,
-      ease: "power3.out",
-    });
-  }, []);
+    if (!hasAnimated) {
+      gsap.timeline().from(noteRef.current, {
+        duration: 1,
+        opacity: 0,
+        y: 50,
+        ease: "power3.out",
+      });
+      dispatch(markAnimated());
+    }
+  });
 
   // Function to animate the menu buttons on toggle
   const toggleAnimation = () => {
@@ -85,7 +90,7 @@ const Note = ({ noteData }) => {
   };
 
   return (
-    <Link to={`/note/${noteData.uid}`} className="block">
+    <Link to={`/note/${noteData.uid}`} className="inline max-h-fit">
       <div
         ref={noteRef}
         id="noteRef"
