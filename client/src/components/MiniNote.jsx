@@ -17,7 +17,6 @@ import {
   DisableCheckIcon,
   DeleteIcon,
   StarIcon,
-  ShareIcon,
 } from "../../public/assets/svgs/index.jsx";
 import { openPopUp } from "../store/slices/popup_slice.js";
 import { gsap } from "gsap";
@@ -41,7 +40,16 @@ const Note = ({ noteData }) => {
     }
   };
 
-  // Animating the note on load
+  // useGSAP(() => {
+  //   // Animating the note on load
+  //   gsap.timeline().from(noteRef.current, {
+  //     duration: 1,
+  //     opacity: 0,
+  //     y: 50,
+  //     ease: "power3.out",
+  //   });
+  // }, []);
+
   useGSAP(() => {
     if (!hasAnimated) {
       gsap.timeline().from(noteRef.current, {
@@ -76,21 +84,8 @@ const Note = ({ noteData }) => {
     toggleAnimation();
   };
 
-  const handleShare = async (e, uid) => {
-    e.preventDefault();
-    if (navigator.share)
-      try {
-        await navigator.share({
-          url: `${window.location.href + "note/" + uid}`, // adding the note/note_id in the url.
-        });
-      } catch (error) {
-        console.error("Error sharing:", error);
-      }
-    else alert("Sharing is not supported on this browser.");
-  };
-
   return (
-    <Link to={`/note/${noteData.uid}`} className="inline max-h-fit">
+    <Link to={`/note/${noteData.uid}`} className="block">
       <div
         ref={noteRef}
         id="noteRef"
@@ -99,18 +94,20 @@ const Note = ({ noteData }) => {
         }`}
       >
         <div id="note-desc" className="h-3/4 text-blue-900">
-          <p className="md:line-clamp-5">{noteData.description}</p>
+          <p className="line-clamp-4 leading-5 sm:line-clamp-5 md:line-clamp-6 md:leading-6">
+            {noteData.description}
+          </p>
         </div>
 
         {/* Displaying star icon if note is important */}
-        {noteData.is_important != 0 && (
+        {noteData.is_important !== 0 && (
           <div className="absolute right-2 top-1 md:right-5 md:top-3">
             <StarIcon />
           </div>
         )}
 
         <div className="relative flex h-1/4 w-full items-center justify-between text-sm">
-          <div id="creation-date" className="text-blue-900">
+          <div id="creation-date" className="text-xs text-blue-900 sm:text-sm">
             {noteData.created_at}
           </div>
 
@@ -202,16 +199,6 @@ const Note = ({ noteData }) => {
               }}
             >
               <DeleteIcon />
-            </div>
-
-            {/* Share button */}
-            <div
-              data-tooltip-id="share-btn"
-              ref={addToRefs}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-              onClick={(e) => handleShare(e, noteData.uid)}
-            >
-              <ShareIcon />
             </div>
           </div>
         </div>
