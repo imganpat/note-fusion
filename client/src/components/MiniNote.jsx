@@ -17,6 +17,7 @@ import {
   DisableCheckIcon,
   DeleteIcon,
   StarIcon,
+  ShareIcon,
 } from "../../public/assets/svgs/index.jsx";
 import { openPopUp } from "../store/slices/popup_slice.js";
 import { gsap } from "gsap";
@@ -40,16 +41,7 @@ const Note = ({ noteData }) => {
     }
   };
 
-  // useGSAP(() => {
-  //   // Animating the note on load
-  //   gsap.timeline().from(noteRef.current, {
-  //     duration: 1,
-  //     opacity: 0,
-  //     y: 50,
-  //     ease: "power3.out",
-  //   });
-  // }, []);
-
+  // Animating the note on load
   useGSAP(() => {
     if (!hasAnimated) {
       gsap.timeline().from(noteRef.current, {
@@ -82,6 +74,18 @@ const Note = ({ noteData }) => {
     menuRef.current.classList.toggle("hidden");
     setIsMenuOpen(!isMenuOpen);
     toggleAnimation();
+  };
+
+  const handleShare = async (uid) => {
+    if (navigator.share)
+      try {
+        await navigator.share({
+          url: `${window.location.href}note/${uid}`,
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    else alert("Sharing is not supported on this browser.");
   };
 
   return (
@@ -199,6 +203,19 @@ const Note = ({ noteData }) => {
               }}
             >
               <DeleteIcon />
+            </div>
+
+            {/* Share button */}
+            <div
+              data-tooltip-id="share-btn"
+              ref={addToRefs}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
+              onClick={(e) => {
+                e.preventDefault();
+                handleShare(noteData.uid);
+              }}
+            >
+              <ShareIcon />
             </div>
           </div>
         </div>
