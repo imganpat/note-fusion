@@ -57,7 +57,7 @@ const Layout = () => {
             <Nav />
           </div>
           <div className="overflow-y-scroll">
-            <Outlet />  
+            <Outlet />
           </div>
         </div>
       </main>
