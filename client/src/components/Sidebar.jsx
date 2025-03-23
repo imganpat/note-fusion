@@ -41,7 +41,7 @@ const Sidebar = () => {
                   <NavLink
                     to={`${li.slug}`}
                     className={({ isActive }) => {
-                      return `flex h-10 w-full cursor-pointer items-center rounded-md rounded-r-full border px-2 py-2 capitalize duration-200 hover:border-gray-500 sm:px-4 sm:text-sm ${isActive ? "bg-blue-900 text-white" : "bg-transparent"}`;
+                      return `flex h-10 w-full cursor-pointer items-center rounded-md rounded-r-full border px-2 py-2 capitalize duration-200 hover:border-gray-500 sm:px-4 sm:text-sm ${isActive ? "bg-gradient-to-br from-blue-950 to-blue-900 text-blue-50" : "bg-transparent"}`;
                     }}
                   >
                     {li.name}
@@ -55,7 +55,12 @@ const Sidebar = () => {
 
       <button
         id="create-btn"
-        className="absolute bottom-10 left-9 z-50 flex h-14 items-center justify-center rounded-md border border-transparent bg-blue-200 px-8 transition-all hover:border-blue-500"
+        className="absolute bottom-10 left-9 z-50 flex h-14 items-center justify-center rounded-md border border-transparent bg-gradient-to-tr from-blue-900 to-blue-950 bg-[length:200%_200%] bg-left px-8 py-4 text-blue-50 transition-all duration-500 ease-in-out hover:border-blue-500 hover:bg-right"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #172554, #1E40AF, #172554)",
+          transition: "background-position 0.3s ease-in-out",
+        }}
         onClick={() => {
           dispatch(
             openPopUp({
