@@ -6,7 +6,7 @@ const AddIcon = () => (
     viewBox="0 0 24 24"
     width={20}
     height={20}
-    color={"#3b82f6"}
+    color={"#dbeafe"}
     fill={"none"}
   >
     <path
