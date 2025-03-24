@@ -47,7 +47,6 @@ const handleAddOrUpdateNote = (
   else dispatch(addNewNote(note));
 
   dispatch(closePopUp());
-  console.log(note);
 };
 
 const Input = () => {
@@ -105,7 +104,7 @@ const Input = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex items-center justify-center overflow-hidden rounded-lg">
+    <div className="absolute left-0 top-0 z-50 flex h-dvh w-screen flex-col items-center justify-center bg-black bg-opacity-50 py-2 sm:py-6 md:py-8 lg:py-8">
       <div
         ref={popUpRef}
         className="fixed top-1/4 flex h-80 max-w-[85%] flex-col items-center justify-center gap-5 rounded-md bg-white px-5 shadow-xl md:min-w-96 lg:max-w-full"
@@ -129,7 +128,7 @@ const Input = () => {
             ref={inputRef}
             cols="50"
             rows="5"
-            className="flex w-full resize-none border-2 border-slate-300 px-2 py-1"
+            className="flex w-full resize-none border border-slate-300 px-2 py-1 outline-none"
             placeholder="Enter your note here"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -153,7 +152,12 @@ const Input = () => {
           </div>
 
           <button
-            className="flex h-10 items-center justify-center bg-blue-500 px-12 py-4 text-blue-50 transition-all hover:bg-blue-600"
+            className="relative flex h-11 w-full items-center justify-center rounded bg-gradient-to-tr from-blue-900 to-blue-950 bg-[length:200%_200%] bg-left px-12 py-4 text-blue-50 transition-all duration-500 ease-in-out hover:bg-right"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, #172554, #1E40AF, #172554)",
+              transition: "background-position 0.3s ease-in-out",
+            }}
             onClick={() =>
               handleAddOrUpdateNote(
                 dispatch,
@@ -166,7 +170,6 @@ const Input = () => {
               )
             }
           >
-            {/* If editing, show "Update" else show "Add" to the button */}
             {isEditing ? "Update" : "Add"}
           </button>
         </div>
