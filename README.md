@@ -1,6 +1,6 @@
 # Note Fusion
 
-This is a modern, full-stack notes management application that lets users effortlessly create, organize, and update notes. Built with a seamless and responsive interface, this app leverages powerful frontend and backend technologies to deliver a smooth user experience. It integrates Redux for efficient state management, Tailwind CSS for sleek design, and GSAP for engaging animations. On the backend, Node.js, Express, and MySQL work together to provide a reliable and secure data handling solution.
+A modern, full-stack notes management application designed for secure and efficient note-taking. Users can create, update, and organize notes with ease while benefiting from authentication, full-screen viewing, and note-sharing capabilities. The app ensures data security and an intuitive user experience by leveraging powerful frontend and backend technologies.
 
 ## 🎯 Demo
 
@@ -8,16 +8,17 @@ If you'd like to see the app in action, you can check out the live [demo](https:
 
 ## 📝 Objective and Aim
 
-The objective of this project is to provide users with an efficient platform to manage their notes. The aim is to deliver a responsive, intuitive, and aesthetically pleasing interface while ensuring robust backend performance with a secure database connection.
+The goal of this project is to provide users with a secure and feature-rich notes management system. With authentication, users can securely store personal notes, and the sharing feature enables controlled access, ensuring privacy while allowing collaboration.
 
 ## 🚀 Features
 
-- Create, Read, Update, and Delete (CRUD) operations for notes.
-- Responsive UI built with Tailwind CSS.
-- Smooth animations using GSAP.
-- State management using Redux Toolkit.
-- Secure backend API using Node.js and Express.
-- Persistent storage with MySQL database.
+1. User Authentication - Users can register and log in to secure their notes.
+1. Full-Screen Note Viewing - Users can view notes in full screen for better readability.
+1. Note Sharing - Share notes with others. The shared note is view-only for viewers, while the creator retains editing rights.
+1. Responsive UI - Built with Tailwind CSS for a clean and modern look.
+1. Smooth Animations - Enhanced user experience using GSAP.
+1. State Management - Efficiently managed with Redux Toolkit.
+1. Secure Backend - Built with Node.js, Express, and MySQL for a reliable and scalable architecture.
 
 ## 🛠️ Tech Stack
 
@@ -46,17 +47,11 @@ The objective of this project is to provide users with an efficient platform to 
 
    ```bash
    git clone https://github.com/imganpat/note-fusion.git
+   cd note-fusion
    ```
 
 2. **Install dependencies**
    Navigate to both frontend(client) and backend(server) directories and install the required packages:
-
-   For Backend:
-
-   ```bash
-   cd server
-   npm install
-   ```
 
    For Frontend:
 
@@ -65,14 +60,22 @@ The objective of this project is to provide users with an efficient platform to 
    npm install
    ```
 
+   For Backend:
+
+   ```bash
+   cd server
+   npm install
+   ```
+
 3. **Environment Variables**
-   To run this project, you will need to create a .env file with the following environment variables in server directory
+   To run this project, you will need to create and setup a .env file with the following environment variables in server directory
 
    `SERVER_PORT`
    `DATABASE_NAME`
    `DATABASE_HOST`
    `DATABASE_USERNAME`
    `DATABASE_PASSWORD`
+   `JWT_SECRET`
 
    ```bash
    cd server
@@ -84,6 +87,7 @@ The objective of this project is to provide users with an efficient platform to 
    echo DATABASE_HOST = localhost >> .env
    echo DATABASE_USERNAME = root >> .env
    echo DATABASE_PASSWORD = '""' >> .env
+   echo JWT_SECRET = your_jwt_secret >> .env
    ```
 
 4. **Start the MySQL server**
