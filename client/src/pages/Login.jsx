@@ -37,6 +37,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({ username: "", password: "" });
   const [error, setError] = useState(""); // State to handle errors
+  const [loginLoading, setLoginLoading] = useState(false);
 
   // check if alredy logged in
   useEffect(() => {
@@ -67,7 +68,10 @@ const Login = () => {
   // Handler for form submission
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoginLoading(true); // Set loading to true when starting the request
     const data = await fetchLogin(user);
+    setLoginLoading(false); // Set loading to false after the request is complete
   };
 
   return (
@@ -112,12 +116,13 @@ const Login = () => {
                     type="text"
                     placeholder="e.g. jhon123"
                     value={user.username}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setUser({
                         ...user,
                         username: e.target.value.trim().toLowerCase(),
-                      })
-                    }
+                      });
+                      setError(""); // Clear error on input change
+                    }}
                   />
                 </div>
                 <div className="w-full">
@@ -131,19 +136,30 @@ const Login = () => {
                     className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
                     id="password"
                     type="password"
+                    placeholder="********"
                     value={user.password}
-                    onChange={(e) =>
-                      setUser({ ...user, password: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setError("");
+                      setUser({ ...user, password: e.target.value });
+                    }}
                   />
                 </div>
                 {/* Display error if any */}
                 {error && <p className="text-red-500">{error}</p>}{" "}
                 <button
-                  className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none"
+                  disabled={loginLoading} // disable the button if loading is true
+                  className="focus:shadow-outline h-10 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none disabled:bg-slate-400"
                   type="submit"
                 >
-                  Log in
+                  {/* Show loading spinner if loading is true */}
+                  {loginLoading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+                    </div>
+                  ) : (
+                    // Show login text if loading is false
+                    "Log in"
+                  )}
                 </button>
                 <p className="mt-3 text-center">
                   Don't have an account?{" "}
