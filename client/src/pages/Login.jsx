@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../constants/backend_url.js";
+import { setLoading } from "../store/slices/notes_slice.js";
+import { useDispatch } from "react-redux";
 
 // Setting the url for authentication
 const URL = `${backendUrl}/api/auth`;
@@ -38,6 +40,7 @@ const Login = () => {
   const [user, setUser] = useState({ username: "", password: "" });
   const [error, setError] = useState(""); // State to handle errors
   const [loginLoading, setLoginLoading] = useState(false);
+  const dispatch = useDispatch();
 
   // check if alredy logged in
   useEffect(() => {
@@ -55,6 +58,7 @@ const Login = () => {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("email", response.data.email);
+      dispatch(setLoading(true));
       navigate("/"); // Redirect upon successful login
       return response.data;
     } catch (error) {
