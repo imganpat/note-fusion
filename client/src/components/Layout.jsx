@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 import backendUrl from "../constants/backend_url";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { initNotes } from "../store/slices/notes_slice";
+import { initNotes, setLoading } from "../store/slices/notes_slice";
 
 const fetchData = async () => {
   const response = await axios.get(`${backendUrl}/api/notes`, {
@@ -22,6 +22,7 @@ const fetchDataAndDispatch = async (dispatch, navigate) => {
   try {
     let apiData = await fetchData();
     dispatch(initNotes(apiData));
+    dispatch(setLoading(false));
   } catch (error) {
     // If token is expired or unauthorized then remove it and redirect to login
     if (error.response && error.response.status === 401) {
@@ -56,7 +57,7 @@ const Layout = () => {
           <div className="flex flex-col">
             <Nav />
           </div>
-          <div className="overflow-y-scroll">
+          <div className="h-full overflow-y-scroll">
             <Outlet />
           </div>
         </div>
