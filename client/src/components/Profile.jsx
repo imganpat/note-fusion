@@ -31,14 +31,14 @@ const Profile = () => {
   };
 
   return (
-    <div className="relative flex h-full w-full flex-1 flex-grow flex-col items-center justify-center p-2 shadow-2xl sm:p-4">
+    <div className="relative flex w-full flex-1 flex-grow flex-col items-center justify-center p-2 shadow sm:p-4">
       <div className="h-36 w-full rounded-t-md bg-gradient-to-tr from-blue-700 to-blue-950"></div>
       <div
         className={`absolute left-6 top-1/4 flex h-28 w-28 items-center justify-center rounded-full border-4 border-white text-4xl font-semibold uppercase text-white sm:top-16 sm:h-32 sm:w-32 md:text-5xl lg:left-10 ${profileBgColor}`}
       >
         <span>{username[0]}</span>
       </div>
-      <div className="ld:p-12 flex w-full flex-col gap-2 rounded-b-md bg-slate-50 p-4 pt-14 lg:pt-16">
+      <div className="flex w-full flex-col gap-2 rounded-b-md bg-slate-50 p-4 pt-14 lg:p-12 lg:pt-16">
         <h3 className="text-xl font-semibold leading-6 text-slate-900 md:text-2xl lg:text-2xl">
           {username}
         </h3>
