@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../../src/constants/backend_url";
 
@@ -15,7 +15,13 @@ const Register = () => {
   const [error, setError] = useState(""); // State for error messages
   const [success, setSuccess] = useState(""); // State for success messages
   const [registerLoading, setRegisterLoading] = useState(false); // State for loading spinner
-
+  // check if alredy logged in
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (localStorage.getItem("token") && !path.startsWith("/note/")) {
+      navigate("/");
+    }
+  });
   const registerUser = async (user) => {
     try {
       setRegisterLoading(true); // Set loading to true when starting the request
