@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const features = [
   {
@@ -41,6 +42,14 @@ const testimonials = [
 ];
 
 const GetStarted = () => {
+  const navigate = useNavigate();
+  // check if alredy logged in
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (localStorage.getItem("token") && !path.startsWith("/note/")) {
+      navigate("/");
+    }
+  });
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 to-black text-white">
       {/* Hero Section */}
