@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./components/Profile";
 import Note from "./components/Note";
+import GetStarted from "./pages/GetStarted";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route path="/">
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
+        <Route path="/get-started" element={<GetStarted />} />
       </Route>
     </>
   )
