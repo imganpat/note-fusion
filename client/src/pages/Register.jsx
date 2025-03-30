@@ -1,41 +1,49 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../../src/constants/backend_url";
-import { nanoid } from "@reduxjs/toolkit";
 
 const URL = `${backendUrl}/api/auth`;
 
 const Register = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
-    userId: "",
     email: "",
     username: "",
     password: "",
   });
   const [error, setError] = useState(""); // State for error messages
   const [success, setSuccess] = useState(""); // State for success messages
-
+  const [registerLoading, setRegisterLoading] = useState(false); // State for loading spinner
+  // check if alredy logged in
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (localStorage.getItem("token") && !path.startsWith("/note/")) {
+      navigate("/");
+    }
+  });
   const registerUser = async (user) => {
-    user.userId = nanoid();
     try {
+      setRegisterLoading(true); // Set loading to true when starting the request
       await axios.post(`${URL}/register`, user);
       setSuccess("Registration successful! Redirecting to login...");
       setError(""); // Clear any previous errors
+      setRegisterLoading(false); // Set loading to false after the request is complete
       setTimeout(() => {
         navigate("/auth/login");
-      }, 1000); // Redirect after 2 seconds
+      }, 1000); // Redirect after 1 seconds
     } catch (err) {
       setError(
         err.response?.data?.message || "Registration failed. Please try again."
       );
       setSuccess(""); // Clear any previous success message
+      setRegisterLoading(false); // Set loading to false if there's an error
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(""); // Clear any previous error messages
     registerUser(user);
   };
 
@@ -84,6 +92,7 @@ const Register = () => {
                     value={user.email}
                     onChange={(e) => {
                       setUser({ ...user, email: e.target.value });
+                      setError("");
                     }}
                   />
                 </div>
@@ -106,6 +115,7 @@ const Register = () => {
                         ...user,
                         username: e.target.value.trim().toLowerCase(),
                       });
+                      setError("");
                     }}
                   />
                 </div>
@@ -121,9 +131,11 @@ const Register = () => {
                     id="password"
                     type="password"
                     required
+                    placeholder="********"
                     value={user.password}
                     onChange={(e) => {
                       setUser({ ...user, password: e.target.value });
+                      setError("");
                     }}
                   />
                 </div>
@@ -132,10 +144,19 @@ const Register = () => {
                 {success && <p className="text-green-500">{success}</p>}{" "}
                 {/* Display success message */}
                 <button
-                  className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none"
+                  disabled={registerLoading} // disable the button if loading is true
+                  className="focus:shadow-outline h-10 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none disabled:bg-slate-400"
                   type="submit"
                 >
-                  Sign Up
+                  {/* Show loading spinner if loading is true */}
+                  {registerLoading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+                    </div>
+                  ) : (
+                    // Show sign up text if loading is false
+                    "Sign up"
+                  )}
                 </button>
                 <p className="mt- text-center">
                   Already have an account?{" "}

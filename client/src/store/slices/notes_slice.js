@@ -9,6 +9,7 @@ const initialState = {
   isPopupOpen: false,
   isEditing: false,
   currentNote: {},
+  isLoading: true,
   hasAnimated: false,
 };
 
@@ -101,6 +102,10 @@ const NoteSlice = createSlice({
     markAnimated: (state) => {
       state.hasAnimated = true;
     },
+
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
   },
 });
 
@@ -114,5 +119,6 @@ export const {
   toogleCompletion,
   editNote,
   deleteNote,
-  markAnimated
+  markAnimated,
+  setLoading
 } = NoteSlice.actions;
