@@ -41,7 +41,7 @@ const Layout = () => {
   useEffect(() => {
     const path = window.location.pathname;
     if (!localStorage.getItem("token") && !path.startsWith("/note/")) {
-      navigate("/auth/login");
+      navigate("/get-started");
     } else if (localStorage.getItem("token")) {
       fetchDataAndDispatch(dispatch, navigate);
     }
