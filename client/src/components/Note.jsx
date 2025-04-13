@@ -25,12 +25,15 @@ const fetchNote = async (
   setImportant,
   setComplete,
   setIsOwner,
+  setLoading,
   navigate
 ) => {
   try {
+    setLoading(true);
     const response = await axios.get(`${backendUrl}/api/notes/${uid}`, {
       withCredentials: true,
     });
+    setLoading(false);
     setNote(response.data[0]);
     setImportant(response.data[0].is_important); // use to toggle the importance icon in real-time
     setComplete(response.data[0].is_complete); // use to toggle the completion icon in real-time
@@ -73,6 +76,7 @@ const handleShare = async () => {
 const Note = () => {
   const { uid } = useParams();
   const [note, setNote] = useState({});
+  const [loading, setLoading] = useState(false);
   const [isOwner, setIsOwner] = useState(true);
   const [important, setImportant] = useState(false);
   const [complete, setComplete] = useState(false);
@@ -81,7 +85,15 @@ const Note = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchNote(uid, setNote, setImportant, setComplete, setIsOwner, navigate);
+    fetchNote(
+      uid,
+      setNote,
+      setImportant,
+      setComplete,
+      setIsOwner,
+      setLoading,
+      navigate
+    );
   }, [uid]);
 
   return (
@@ -93,16 +105,34 @@ const Note = () => {
           </div>
         )}
         <div className="scrollbar flex flex-grow flex-col overflow-y-auto p-4">
-          <div className="flex flex-grow flex-col">
-            <pre
-              className={`flex-grow text-wrap font-sans outline-none ${complete ? "line-through" : ""}`}
-              contentEditable={isOwner}
-              onInput={(e) => handelEdit(e, note, dispatch)}
-            >
-              {note.description}
-            </pre>
-            <span className="mt-10 max-h-fit self-end text-sm">
-              Created {!isOwner ? note.username : ""} on {note.created_at}
+          <div className="flex flex-grow flex-col gap-2">
+            {loading ? (
+              <>
+                <div className="h-5 w-3/5 animate-pulse rounded-full bg-gray-200"></div>
+                <div className="h-5 w-full animate-pulse rounded-full bg-gray-200 delay-75"></div>
+                <div className="h-5 w-2/3 animate-pulse rounded-full bg-gray-200 delay-100"></div>
+                <div className="h-5 w-4/5 animate-pulse rounded-full bg-gray-200 delay-150"></div>
+              </>
+            ) : (
+              <>
+                <pre
+                  className={`flex-grow text-wrap font-sans outline-none ${complete ? "line-through" : ""}`}
+                  contentEditable={isOwner}
+                  onInput={(e) => handelEdit(e, note, dispatch)}
+                >
+                  {note.description}
+                </pre>
+              </>
+            )}
+
+            <span className="mt-10 max-h-fit w-fit self-end text-sm">
+              {loading ? (
+                <div className="h-5 min-w-[40ch] animate-pulse rounded-full bg-gray-200"></div>
+              ) : (
+                <p>
+                  Created {!isOwner ? note.username : ""} on {note.created_at}
+                </p>
+              )}
             </span>
           </div>
         </div>
@@ -173,7 +203,7 @@ const Note = () => {
               <>
                 <span />
                 <Link
-                  to={"/auth/login"}
+                  to={"/get-started"}
                   className="text-blue-600 hover:text-blue-500"
                 >
                   Want to create your own note?
