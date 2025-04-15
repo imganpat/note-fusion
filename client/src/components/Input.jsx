@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { addNewNote, editNote } from "../store/slices/notes_slice.js";
+import { addNewNote, editNote } from "../store/thunks/notes_thunk.js";
 import { closePopUp } from "../store/slices/popup_slice.js";
 import CancelIcon from "../../public/assets/svgs/CancelIcon";
 
@@ -21,7 +21,7 @@ const months = [
   "Dec",
 ];
 
-const handleAddOrUpdateNote = (
+const handleAddOrUpdateNote = async (
   dispatch,
   isEditing,
   currentNote,
@@ -43,8 +43,8 @@ const handleAddOrUpdateNote = (
     username,
   };
 
-  if (isEditing) dispatch(editNote(note));
-  else dispatch(addNewNote(note));
+  if (isEditing) await dispatch(editNote(note));
+  else await dispatch(addNewNote(note));
 
   dispatch(closePopUp());
 };
