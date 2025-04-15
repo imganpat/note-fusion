@@ -39,7 +39,7 @@ const addNewNote = async (req, res) => {
 
     await db.query(sql, [uid, description, created_at, is_important, is_complete, username], (err, rows) => {
         try {
-            res.status(200).json(rows)
+            res.status(200).json({ uid, description, created_at, is_important, is_complete, username });
         }
         catch (err) {
             res.status(500).json(err);
@@ -65,7 +65,7 @@ const deleteNote = async (req, res) => {
 }
 
 
-const toogleImportance = async (req, res) => {
+const toggleImportance = async (req, res) => {
     const { uid } = req.params;
     const { username } = req.user;
 
@@ -81,7 +81,7 @@ const toogleImportance = async (req, res) => {
 }
 
 
-const toogleCompletion = async (req, res) => {
+const toggleCompletion = async (req, res) => {
     const { uid } = req.params;
     const { username } = req.user;
     const sql = "UPDATE notes SET is_complete = CASE WHEN is_complete THEN 0 ELSE 1 END WHERE uid = ? AND username = ?";
@@ -114,4 +114,4 @@ const editDesc = async (req, res) => {
     })
 }
 
-export default { getAllNotes, getOneNote, addNewNote, deleteNote, toogleImportance, toogleCompletion, editDesc }
+export default { getAllNotes, getOneNote, addNewNote, deleteNote, toggleImportance, toggleCompletion, editDesc }
