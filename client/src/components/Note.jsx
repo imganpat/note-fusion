@@ -14,10 +14,10 @@ import {
 } from "../../public/assets/svgs/index";
 import {
   deleteNote,
+  toggleImportance,
+  toggleCompletion,
   editNote,
-  toogleCompletion,
-  toogleImportance,
-} from "../store/slices/notes_slice";
+} from "../store/thunks/notes_thunk";
 
 const fetchNote = async (
   uid,
@@ -56,8 +56,8 @@ const handelEdit = async (e, note, dispatch) => {
   }, 3000);
 };
 
-const handleDelete = async (dispatch, note, navigate) => {
-  await dispatch(deleteNote(note));
+const handleDelete = async (dispatch, uid, navigate) => {
+  await dispatch(deleteNote(uid));
   navigate("/");
 };
 
@@ -147,7 +147,7 @@ const Note = () => {
                     data-tooltip-id="mark-imp-btn"
                     className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-transparent p-2 hover:border-neutral-500"
                     onClick={() => {
-                      dispatch(toogleImportance(note));
+                      dispatch(toggleImportance(note.uid));
                       setImportant((prev) => !prev);
                     }}
                   >
@@ -161,7 +161,7 @@ const Note = () => {
                     data-tooltip-id="mark-com-btn"
                     className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-transparent p-2 hover:border-neutral-500"
                     onClick={() => {
-                      dispatch(toogleCompletion(note));
+                      dispatch(toggleCompletion(note.uid));
                       setComplete((prev) => !prev);
                     }}
                   >
@@ -174,7 +174,7 @@ const Note = () => {
                   <div
                     data-tooltip-id="del-btn"
                     className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-transparent p-2 hover:border-neutral-500"
-                    onClick={() => handleDelete(dispatch, note, navigate)}
+                    onClick={() => handleDelete(dispatch, note.uid, navigate)}
                   >
                     <DeleteIcon color={"#000"} />
                   </div>
