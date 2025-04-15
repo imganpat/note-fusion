@@ -2,26 +2,15 @@ import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Nav from "./Nav";
 import Sidebar from "./Sidebar";
-import backendUrl from "../constants/backend_url";
 import { useDispatch } from "react-redux";
-import axios from "axios";
-import { initNotes, setLoading } from "../store/slices/notes_slice";
-
-const fetchData = async () => {
-  const response = await axios.get(`${backendUrl}/api/notes`, {
-    withCredentials: true,
-    headers: {
-      Authorization: localStorage.getItem("token"),
-    },
-  });
-  return response.data;
-};
+import { setLoading } from "../store/slices/notes_slice";
+import { getAllNotes } from "../store/thunks/notes_thunk";
 
 // Function to initialize the store woth the user notes
 const fetchDataAndDispatch = async (dispatch, navigate) => {
   try {
-    let apiData = await fetchData();
-    dispatch(initNotes(apiData));
+    dispatch(setLoading(true));
+    await dispatch(getAllNotes());
     dispatch(setLoading(false));
   } catch (error) {
     // If token is expired or unauthorized then remove it and redirect to login
