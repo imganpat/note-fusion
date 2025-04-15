@@ -10,9 +10,9 @@ router.get("/:uid", notesController.getOneNote)
 
 router.post("/add", isAuthenticated, notesController.addNewNote)
 
-router.put("/imp/:uid", isAuthenticated, notesController.toogleImportance)
+router.put("/imp/:uid", isAuthenticated, notesController.toggleImportance)
 
-router.put("/complete/:uid", isAuthenticated, notesController.toogleCompletion)
+router.put("/complete/:uid", isAuthenticated, notesController.toggleCompletion)
 
 router.put("/edit/:uid", isAuthenticated, notesController.editDesc)
 
