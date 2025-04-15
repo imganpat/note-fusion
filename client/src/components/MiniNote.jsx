@@ -1,12 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { markAnimated } from "../store/slices/notes_slice.js";
 import {
-  toogleImportance,
-  toogleCompletion,
   deleteNote,
-  markAnimated,
-} from "../store/slices/notes_slice.js";
+  toggleImportance,
+  toggleCompletion,
+} from "../store/thunks/notes_thunk.js";
 import {
   MenuIcon,
   CancelIcon,
@@ -23,7 +23,7 @@ import { openPopUp } from "../store/slices/popup_slice.js";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const Note = ({ noteData }) => {
+const MiniNote = ({ noteData }) => {
   const dispatch = useDispatch();
   const menuBtnRef = useRef();
   const menuRef = useRef();
@@ -31,8 +31,13 @@ const Note = ({ noteData }) => {
   const utilityBtnRefs = useRef([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const hasAnimated = useSelector((state) => state.notes.hasAnimated);
+  const [important, setImportant] = useState(noteData.is_important);
 
   utilityBtnRefs.current = [];
+
+  useEffect(() => {
+    setImportant(noteData.is_important);
+  }, [noteData.is_important]);
 
   // Function to add elements to the utilityBtnRefs array for animation purposes using menu buttons
   const addToRefs = (el) => {
@@ -104,10 +109,12 @@ const Note = ({ noteData }) => {
         </div>
 
         {/* Displaying star icon if note is important */}
-        {noteData.is_important !== 0 && (
+        {important ? (
           <div className="absolute right-2 top-1 md:right-5 md:top-3">
             <StarIcon />
           </div>
+        ) : (
+          ""
         )}
 
         <div className="relative flex h-1/4 w-full items-center justify-between text-sm">
@@ -161,11 +168,12 @@ const Note = ({ noteData }) => {
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
               onClick={(e) => {
                 e.preventDefault(); // Prevent navigation
-                dispatch(toogleImportance(noteData));
+                dispatch(toggleImportance(noteData.uid));
+                setImportant((prev) => !prev);
                 toggleMenu(e);
               }}
             >
-              {!noteData.is_important ? <ImpIcon /> : <DisableImpIcon />}
+              {!important ? <ImpIcon /> : <DisableImpIcon />}
             </div>
 
             {/* Toggle completion button */}
@@ -175,7 +183,7 @@ const Note = ({ noteData }) => {
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
               onClick={(e) => {
                 e.preventDefault(); // Prevent navigation
-                dispatch(toogleCompletion(noteData));
+                dispatch(toggleCompletion(noteData.uid));
                 toggleMenu(e);
               }}
             >
@@ -196,7 +204,7 @@ const Note = ({ noteData }) => {
                   duration: 0.3,
                   display: "none",
                   onComplete: () => {
-                    dispatch(deleteNote(noteData));
+                    dispatch(deleteNote(noteData.uid));
                     toggleMenu(e);
                   },
                 });
@@ -224,4 +232,4 @@ const Note = ({ noteData }) => {
   );
 };
 
-export default Note;
+export default MiniNote;
