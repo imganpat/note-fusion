@@ -5,7 +5,7 @@ const PopUpSlice = createSlice({
   initialState: {
     isPopupOpen: false,
     isEditing: false,
-    currentNote: { uid: null, description: "", is_important: false },
+    currentNote: { uid: null, title: "", description: "", is_important: false },
   },
   reducers: {
     openPopUp(state, action) {
@@ -13,6 +13,7 @@ const PopUpSlice = createSlice({
       state.isEditing = action.payload.isEditing;
       state.currentNote = {
         uid: action.payload.currentNote.uid,
+        title: action.payload.currentNote.title,
         description: action.payload.currentNote.description,
         is_important: action.payload.currentNote.is_important,
       };

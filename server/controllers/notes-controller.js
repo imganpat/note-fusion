@@ -31,15 +31,15 @@ const getOneNote = async (req, res) => {
 const addNewNote = async (req, res) => {
     const { username } = req.user;
     const uid = uuidv4();
-    let { description, created_at, is_important, is_complete } = req.body;
-    const sql = ("INSERT INTO notes (uid, description, created_at, is_important, is_complete, username) VALUES (?, ?, ?, ?, ?, ?)");
+    let { title, description, created_at, is_important, is_complete } = req.body;
+    const sql = ("INSERT INTO notes (uid, title, description, created_at, is_important, is_complete, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     is_important = is_important ? 1 : 0;
     is_complete = is_complete ? 1 : 0;
 
-    await db.query(sql, [uid, description, created_at, is_important, is_complete, username], (err, rows) => {
+    await db.query(sql, [uid, title, description, created_at, is_important, is_complete, username], (err, rows) => {
         try {
-            res.status(200).json({ uid, description, created_at, is_important, is_complete, username });
+            res.status(200).json({ uid, title, description, created_at, is_important, is_complete, username });
         }
         catch (err) {
             res.status(500).json(err);
@@ -96,15 +96,15 @@ const toggleCompletion = async (req, res) => {
 }
 
 
-const editDesc = async (req, res) => {
+const editNote = async (req, res) => {
     const { uid } = req.params;
     const { username } = req.user;
-    let { description, is_important } = req.body;
+    let { title, description, is_important } = req.body;
     is_important = is_important ? 1 : 0;
 
-    const sql = "UPDATE notes SET description = ?, is_important = ? WHERE uid = ? AND username = ?";
+    const sql = "UPDATE notes SET title = ?, description = ?, is_important = ? WHERE uid = ? AND username = ?";
 
-    await db.query(sql, [description, is_important, uid, username], (err, rows) => {
+    await db.query(sql, [title, description, is_important, uid, username], (err, rows) => {
         try {
             res.status(200).json(rows);
         }
@@ -114,4 +114,4 @@ const editDesc = async (req, res) => {
     })
 }
 
-export default { getAllNotes, getOneNote, addNewNote, deleteNote, toggleImportance, toggleCompletion, editDesc }
+export default { getAllNotes, getOneNote, addNewNote, deleteNote, toggleImportance, toggleCompletion, editNote }

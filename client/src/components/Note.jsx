@@ -48,11 +48,18 @@ const fetchNote = async (
   }
 };
 
-const handelEdit = async (e, note, dispatch) => {
+const handleTitleEdit = async (e, note, dispatch) => {
+  setTimeout(() => {
+    const updatedNote = { ...note, title: e.target.innerText };
+    dispatch(editNote(updatedNote));
+  }, 3000);
+};
+
+const handleDescEdit = async (e, note, dispatch) => {
   // wait for 3 seconds which reduces the api calls and updates the note after the user stops typing
   setTimeout(() => {
-    note.description = e.target.innerText;
-    dispatch(editNote(note));
+    const updatedNote = { ...note, description: e.target.innerText };
+    dispatch(editNote(updatedNote));
   }, 3000);
 };
 
@@ -97,7 +104,7 @@ const Note = () => {
   }, [uid]);
 
   return (
-    <div className="absolute left-0 top-0 z-50 flex h-dvh w-screen flex-col items-center justify-center bg-black bg-opacity-50 py-2 sm:py-6 md:py-8 lg:py-8">
+    <div className="absolute left-0 top-0 z-50 flex h-dvh w-screen flex-col items-center justify-center bg-black bg-opacity-70 py-2 sm:py-6 md:py-8 lg:py-8">
       <div className="relative flex max-h-fit w-11/12 flex-grow flex-col overflow-y-auto overflow-x-hidden rounded-lg bg-gray-100 shadow lg:w-3/5">
         {important != 0 && (
           <div className="absolute right-2 top-1 z-auto md:right-5 md:top-3">
@@ -108,20 +115,37 @@ const Note = () => {
           <div className="flex flex-grow flex-col gap-2">
             {loading ? (
               <>
-                <div className="h-5 w-3/5 animate-pulse rounded-full bg-gray-200"></div>
-                <div className="h-5 w-full animate-pulse rounded-full bg-gray-200 delay-75"></div>
-                <div className="h-5 w-2/3 animate-pulse rounded-full bg-gray-200 delay-100"></div>
-                <div className="h-5 w-4/5 animate-pulse rounded-full bg-gray-200 delay-150"></div>
+                <div className="h-6 w-full animate-pulse rounded-full bg-gray-200"></div>
+                <div className="h-6 w-3/5 animate-pulse rounded-full bg-gray-200"></div>
+                <div className="h-2"></div>
+                <div className="h-4 w-full animate-pulse rounded-full bg-gray-200"></div>
+                <div className="h-4 w-2/3 animate-pulse rounded-full bg-gray-200"></div>
+                <div className="h-4 w-4/5 animate-pulse rounded-full bg-gray-200"></div>
               </>
             ) : (
               <>
-                <pre
-                  className={`flex-grow text-wrap font-sans outline-none ${complete ? "line-through" : ""}`}
-                  contentEditable={isOwner}
-                  onInput={(e) => handelEdit(e, note, dispatch)}
-                >
-                  {note.description}
-                </pre>
+                <div className="flex flex-col gap-4">
+                  <h1
+                    className={`flex-grow text-wrap font-sans text-2xl font-semibold text-gray-800 outline-none ${complete ? "line-through opacity-55" : null}`}
+                    suppressContentEditableWarning={true}
+                    contentEditable={isOwner}
+                    onClick={(e) => {
+                      if (e.target.innerText === "Untiteled")
+                        e.target.innerText = null;
+                    }}
+                    onInput={(e) => handleTitleEdit(e, note, dispatch)}
+                  >
+                    {note.title || "Untiteled"}
+                  </h1>
+                  <pre
+                    className={`flex-grow text-wrap font-sans text-gray-700 outline-none ${complete ? "line-through opacity-50" : null}`}
+                    suppressContentEditableWarning={true}
+                    contentEditable={isOwner}
+                    onInput={(e) => handleDescEdit(e, note, dispatch)}
+                  >
+                    {note.description}
+                  </pre>
+                </div>
               </>
             )}
 
@@ -129,7 +153,7 @@ const Note = () => {
               {loading ? (
                 <div className="h-5 min-w-[40ch] animate-pulse rounded-full bg-gray-200"></div>
               ) : (
-                <p>
+                <p className="text-sm text-gray-600">
                   Created {!isOwner ? note.username : ""} on {note.created_at}
                 </p>
               )}

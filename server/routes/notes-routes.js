@@ -14,7 +14,7 @@ router.put("/imp/:uid", isAuthenticated, notesController.toggleImportance)
 
 router.put("/complete/:uid", isAuthenticated, notesController.toggleCompletion)
 
-router.put("/edit/:uid", isAuthenticated, notesController.editDesc)
+router.put("/edit/:uid", isAuthenticated, notesController.editNote)
 
 router.delete("/delete/:uid", isAuthenticated, notesController.deleteNote)
 
