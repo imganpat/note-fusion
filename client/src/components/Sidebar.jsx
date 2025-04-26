@@ -73,7 +73,7 @@ const Sidebar = () => {
             dispatch(
               openPopUp({
                 isEditing: false,
-                currentNote: { uid: "", description: "" },
+                currentNote: { uid: "", title: "", description: "" },
               })
             );
           }}
