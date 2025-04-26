@@ -42,6 +42,7 @@ const NoteSlice = createSlice({
       // action.payload is the note object with updated values
       const note = state.notes.find((note) => note.uid === action.payload.uid);
       if (note) {
+        note.title = action.payload.title;
         note.description = action.payload.description;
         note.is_important = action.payload.is_important;
         note.is_complete = action.payload.is_complete;
