@@ -25,6 +25,7 @@ const handleAddOrUpdateNote = async (
   dispatch,
   isEditing,
   currentNote,
+  title,
   description,
   is_important,
   is_completed,
@@ -36,6 +37,7 @@ const handleAddOrUpdateNote = async (
 
   const note = {
     uid: isEditing ? currentNote.uid : null, // If editing, keep the current uid else set to null
+    title, // If editing, keep the current title else set to "New Note"
     description,
     created_at: isEditing ? currentNote.created_at : noteDate, // If editing, keep the current created_at date else set the new date
     is_important,
@@ -53,9 +55,15 @@ const Input = () => {
   const dispatch = useDispatch();
 
   const popUpRef = useRef();
-  const inputRef = useRef();
+  const titleRef = useRef();
+  const descriptionRef = useRef();
 
   const { isEditing, currentNote } = useSelector((state) => state.popup); // getting isEditing and currentNote from popup slice
+
+  const [title, setTitle] = useState(
+    // setting title to currentNote title if editing else empty string
+    currentNote?.title || ""
+  );
 
   const [description, setDescription] = useState(
     // setting description to currentNote description if editing else empty string
@@ -81,15 +89,16 @@ const Input = () => {
 
   useEffect(() => {
     if (isEditing) {
+      setTitle(currentNote.title);
       setDescription(currentNote.description);
       setIsImportant(currentNote.is_important);
     }
-    if (inputRef.current) {
-      inputRef.current.focus(); // Focusing on the input field when the popup is opened
+    if (descriptionRef.current) {
+      descriptionRef.current.focus(); // Focusing on the input field when the popup is opened
       //     // Setting the cursor at the end of the input field when editing
-      inputRef.current.setSelectionRange(
-        inputRef.current.value.length,
-        inputRef.current.value.length
+      descriptionRef.current.setSelectionRange(
+        descriptionRef.current.value.length,
+        descriptionRef.current.value.length
       );
     }
   }, [isEditing, currentNote]);
@@ -104,35 +113,39 @@ const Input = () => {
   }, [dispatch]);
 
   return (
-    <div className="absolute left-0 top-0 z-50 flex h-dvh w-screen flex-col items-center justify-center bg-black bg-opacity-50 py-2 sm:py-6 md:py-8 lg:py-8">
+    <div className="absolute left-0 top-0 z-50 flex h-dvh w-screen flex-col items-center justify-center bg-black bg-opacity-70 py-2 sm:py-6 md:py-8 lg:py-8">
       <div
         ref={popUpRef}
-        className="fixed top-1/4 flex h-80 max-w-[85%] flex-col items-center justify-center gap-5 rounded-md bg-white px-5 shadow-xl md:min-w-96 lg:max-w-full"
+        className="fixed top-1/4 flex h-[20rem] max-w-[85%] flex-col items-center justify-center gap-5 rounded-md bg-white px-5 shadow-xl md:min-w-96 lg:max-w-full"
       >
-        <div className="flex w-full items-center justify-between">
-          <span className="text-lg font-semibold text-gray-700">
-            {/* If editing, show "Update" else show "Add" to the popup title*/}
-            {isEditing ? "Update" : "Add"} a note
-          </span>
-
-          <button
-            onClick={() => dispatch(closePopUp())}
-            className="place-self-end"
-          >
-            <CancelIcon color="black" size="23" />
-          </button>
-        </div>
+        <button
+          onClick={() => dispatch(closePopUp())}
+          className="absolute top-4 place-self-end"
+        >
+          <CancelIcon color="#9ca3af" size="23" />
+        </button>
 
         <div className="flex w-full flex-col items-center justify-center gap-3">
-          <textarea
-            ref={inputRef}
-            cols="50"
-            rows="5"
-            className="flex w-full resize-none border border-slate-300 px-2 py-1 outline-none"
-            placeholder="Enter your note here"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
+          <div className="flex w-full flex-col items-center justify-center gap-2">
+            <input
+              type="text"
+              ref={titleRef}
+              className="flex w-full resize-none px-2 py-1 text-lg font-semibold text-gray-800 outline-none"
+              placeholder="New Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <div className="h-[1px] w-full border-b border-gray-300"></div>
+            <textarea
+              ref={descriptionRef}
+              cols="50"
+              rows="5"
+              className="flex w-full resize-none border-none border-slate-300 px-2 py-1 outline-none"
+              placeholder="Enter your note here"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            ></textarea>
+          </div>
 
           {/* Mark Important option */}
           <div className="my-2 flex w-full items-center">
@@ -145,7 +158,7 @@ const Input = () => {
             />
             <label
               htmlFor="is-important"
-              className="ml-2 cursor-pointer text-sm font-medium text-gray-700"
+              className="ml-2 cursor-pointer text-sm text-gray-500"
             >
               Mark important
             </label>
@@ -163,6 +176,7 @@ const Input = () => {
                 dispatch,
                 isEditing,
                 currentNote,
+                title,
                 description,
                 is_important,
                 is_completed,
