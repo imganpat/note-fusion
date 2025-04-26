@@ -99,11 +99,16 @@ const MiniNote = ({ noteData }) => {
         ref={noteRef}
         id="noteRef"
         className={`relative h-28 w-36 rounded px-2 py-1 text-sm sm:h-36 sm:w-44 md:h-52 md:w-64 md:rounded-xl md:px-5 md:pb-1 md:pt-4 md:text-base ${
-          noteData.is_complete ? "bg-blue-50 line-through" : "bg-blue-100"
+          noteData.is_complete
+            ? "bg-blue-50 text-gray-400 line-through"
+            : "bg-blue-100 text-blue-900"
         }`}
       >
-        <div id="note-desc" className="h-3/4 text-blue-900">
-          <p className="line-clamp-4 leading-5 sm:line-clamp-5 md:line-clamp-6 md:leading-6">
+        <div id="note-desc" className="flex h-3/4 flex-col gap-1">
+          <h5 className="line-clamp-1 text-lg font-semibold">
+            {noteData.title}
+          </h5>
+          <p className="line-clamp-3 leading-5 sm:line-clamp-4 md:line-clamp-5">
             {noteData.description}
           </p>
         </div>
@@ -126,7 +131,7 @@ const MiniNote = ({ noteData }) => {
           <div
             ref={menuBtnRef}
             id="edit-btn"
-            className="absolute bottom-2 right-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
+            className="absolute bottom-2 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
             onClick={toggleMenu}
           >
             {/* Toggle between menu and cancel icon */}
@@ -150,6 +155,7 @@ const MiniNote = ({ noteData }) => {
                     isEditing: true,
                     currentNote: {
                       uid: noteData.uid,
+                      title: noteData.title,
                       description: noteData.description,
                       is_important: noteData.is_important,
                     },
