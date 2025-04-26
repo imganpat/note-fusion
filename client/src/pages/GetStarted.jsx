@@ -53,7 +53,7 @@ const GetStarted = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-950 to-black text-white">
       {/* Hero Section */}
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto max-w-6xl px-4">
         <nav className="flex h-20 items-center justify-between border-b border-blue-900/30 py-4">
           <div className="text-2xl font-bold text-blue-50">NoteFusion</div>
           <div className="flex gap-4">
@@ -81,7 +81,7 @@ const GetStarted = () => {
               Experience full-screen viewing and seamless note sharing where
               only you can edit your notes.
             </p>
-            <Link to="/auth/register">
+            <Link to="/auth/login">
               <button className="group flex items-center rounded bg-blue-500 px-8 py-3 text-lg font-semibold text-white transition-all duration-300 hover:bg-blue-600">
                 Get Started
               </button>
