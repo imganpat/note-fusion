@@ -25,6 +25,15 @@ const NoteSlice = createSlice({
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+
+    sortNotes(state, action) {
+      const { sortBy } = action.payload || localStorage.getItem("sortBy") || "new-first"; // default to "new-first" if not provided
+      localStorage.setItem("sortBy", sortBy); //stroring the sortBy value in localStorage
+      if (sortBy == "new-first")
+        state.notes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      else if (sortBy == "old-first")
+        state.notes.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    }
   },
 
   extraReducers: (builder) => {
@@ -73,5 +82,6 @@ export default NoteSlice;
 export const {
   clearAllNotes,
   markAnimated,
-  setLoading
+  setLoading,
+  sortNotes
 } = NoteSlice.actions;
