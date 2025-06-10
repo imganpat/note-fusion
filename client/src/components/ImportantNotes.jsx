@@ -16,7 +16,7 @@ const NotesContainer = () => {
           <p className="animate-pulse">Loading...</p>
         </div>
       ) : (
-        <div className="flex flex-wrap justify-start gap-4 p-4 md:p-8">
+        <div className="flex flex-wrap justify-start gap-4 px-4 md:p-8">
           {/* Checking if the notes are present or not */}
           {note.length <= 0 ? (
             <h1 className="text-2xl text-blue-600">

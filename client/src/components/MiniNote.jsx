@@ -32,6 +32,14 @@ const MiniNote = ({ noteData }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const hasAnimated = useSelector((state) => state.notes.hasAnimated);
   const [important, setImportant] = useState(noteData.is_important);
+  const formatedDate = new Date(noteData.created_at).toLocaleDateString(
+    "en-US",
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }
+  );
 
   utilityBtnRefs.current = [];
 
@@ -124,7 +132,7 @@ const MiniNote = ({ noteData }) => {
 
         <div className="relative flex h-1/4 w-full items-center justify-between text-sm">
           <div id="creation-date" className="text-xs text-blue-900 sm:text-sm">
-            {noteData.created_at}
+            {formatedDate}
           </div>
 
           {/* Menu button moved to bottom right */}

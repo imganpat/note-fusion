@@ -87,6 +87,14 @@ const Note = () => {
   const [isOwner, setIsOwner] = useState(true);
   const [important, setImportant] = useState(false);
   const [complete, setComplete] = useState(false);
+  const formatedDate = new Date(note.created_at).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -154,7 +162,8 @@ const Note = () => {
                 <div className="h-5 min-w-[40ch] animate-pulse rounded-full bg-gray-200"></div>
               ) : (
                 <p className="text-sm text-gray-600">
-                  Created {!isOwner ? note.username : ""} on {note.created_at}
+                  Created {!isOwner ? "by " + note.username : ""} on{" "}
+                  {formatedDate}
                 </p>
               )}
             </span>
