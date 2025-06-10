@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import URL from "../constants/backend_url";
-import { clearAllNotes } from "../store/slices/notes_slice";
+import { clearAllNotes, sortNotes } from "../store/slices/notes_slice";
 import { useDispatch } from "react-redux";
 
 // links object for navigation
@@ -18,6 +18,17 @@ const linksObject = [
   {
     name: "Completed",
     slug: "/complete",
+  },
+];
+
+const sortingOptions = [
+  {
+    name: "Newest first",
+    value: "new-first",
+  },
+  {
+    name: "Oldest first",
+    value: "old-first",
   },
 ];
 
@@ -129,21 +140,51 @@ const Nav = () => {
       </div>
 
       {/* Navigation links for mobile view only */}
-      <nav className="mx-4 my-2 flex gap-4 text-sm sm:hidden">
-        {linksObject.map((li) => {
-          return (
-            <div key={li.slug}>
-              <NavLink
-                to={`${li.slug}`}
-                className={({ isActive }) => {
-                  return `flex h-10 cursor-pointer items-center rounded-full border border-transparent px-4 py-1 capitalize duration-200 hover:border hover:border-gray-500 sm:px-2 md:rounded-md ${isActive ? "bg-blue-900 text-white" : "bg-transparent"}`;
-                }}
+      <nav className="mx-4 my-3 flex gap-4 text-sm sm:hidden">
+        <select
+          name="nav-links"
+          className="rounded-md border px-2 py-2 text-sm text-gray-700 outline-none sm:px-4"
+          defaultValue={window.location.pathname}
+          onChange={(e) => {
+            const selectedSlug = e.target.value;
+            if (selectedSlug) {
+              navigate(selectedSlug);
+            }
+          }}
+        >
+          {linksObject.map((li) => {
+            return (
+              <option
+                key={li.slug}
+                value={li.slug}
+                className="cursor-pointer capitalize"
               >
                 {li.name}
-              </NavLink>
-            </div>
-          );
-        })}
+              </option>
+            );
+          })}
+        </select>
+
+        <select
+          name="sorting-order"
+          className="rounded-md border px-2 py-2 text-sm text-gray-700 outline-none sm:px-4"
+          defaultValue={localStorage.getItem("sortBy") || "old-first"}
+          onChange={(e) => {
+            dispatch(sortNotes({ sortBy: e.target.value }));
+          }}
+        >
+          {sortingOptions.map((li) => {
+            return (
+              <option
+                key={li.value}
+                value={li.value}
+                className="cursor-pointer capitalize"
+              >
+                {li.name}
+              </option>
+            );
+          })}
+        </select>
       </nav>
     </>
   );
