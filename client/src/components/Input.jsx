@@ -6,21 +6,6 @@ import { addNewNote, editNote } from "../store/thunks/notes_thunk.js";
 import { closePopUp } from "../store/slices/popup_slice.js";
 import CancelIcon from "../../public/assets/svgs/CancelIcon";
 
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
 const handleAddOrUpdateNote = async (
   dispatch,
   isEditing,
@@ -32,8 +17,7 @@ const handleAddOrUpdateNote = async (
   username
 ) => {
   const date = new Date();
-  const monthName = months[date.getMonth()]; // Getting the month name from the months array using the month index like 0 for Jan, 1 for Feb, etc.
-  const noteDate = `${monthName} ${date.getDate()}, ${date.getFullYear()}`; // Creating the date in the format like Jan 1, 2022
+  const noteDate = date.toISOString().slice(0, 19).replace("T", " ");
 
   const note = {
     uid: isEditing ? currentNote.uid : null, // If editing, keep the current uid else set to null
