@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Nav from "./Nav";
 import Sidebar from "./Sidebar";
 import { useDispatch } from "react-redux";
-import { setLoading } from "../store/slices/notes_slice";
+import { setLoading, sortNotes } from "../store/slices/notes_slice";
 import { getAllNotes } from "../store/thunks/notes_thunk";
 
 // Function to initialize the store woth the user notes
@@ -11,6 +11,7 @@ const fetchDataAndDispatch = async (dispatch, navigate) => {
   try {
     dispatch(setLoading(true));
     await dispatch(getAllNotes());
+    dispatch(sortNotes({ sortBy: localStorage.getItem("sortBy") }));
     dispatch(setLoading(false));
   } catch (error) {
     // If token is expired or unauthorized then remove it and redirect to login
