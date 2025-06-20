@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@shadcn/components/*": ["src/components/*"],
+      "@shadcn/lib/*": ["src/lib/*"],
+      "@shadcn/hooks/*": ["src/hooks/*"],
+      "@shadcn/components/ui/*": ["src/components/ui/*"]
+    }
+  }
+}
