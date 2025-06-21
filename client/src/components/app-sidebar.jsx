@@ -1,4 +1,4 @@
-import { NotebookPen, Settings, SidebarIcon } from "lucide-react";
+import { NotebookPen } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -22,8 +22,7 @@ import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { NavLink } from "react-router-dom";
 
-// Menu items.
-const items = [
+const navigationOptions = [
   {
     title: "All",
     url: "/",
@@ -38,41 +37,47 @@ const items = [
   },
 ];
 
+const sortingOptions = [
+  {
+    title: "Newest first",
+    value: "new-first",
+  },
+  {
+    title: "Oldest first",
+    value: "old-first",
+  },
+];
+
 export function AppSidebar() {
   const isMobile = useIsMobile();
   return (
-    <Sidebar defaultOpen={true}>
+    <Sidebar>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <NavLink to="/">
-                <NotebookPen />
-                <span>Note Fusion</span>
-              </NavLink>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <SidebarMenuButton asChild>
+          <NavLink to="/">
+            <NotebookPen />
+            <span>Note Fusion</span>
+          </NavLink>
+        </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>My Notes</SidebarGroupLabel>
+          <SidebarGroupLabel>Notes</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {navigationOptions.map((option) => (
+                <SidebarMenuItem key={option.title}>
                   <SidebarMenuButton
                     asChild
-                    isActive={window.location.pathname === item.url}
+                    isActive={window.location.pathname === option.url}
                   >
-                    <NavLink to={item.url}>{item.title}</NavLink>
+                    <NavLink to={option.url}>{option.title}</NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        {/* <SidebarSeparator /> */}
         <SidebarGroup>
           <SidebarGroupLabel>Sort</SidebarGroupLabel>
           <SidebarMenu>
@@ -82,8 +87,11 @@ export function AppSidebar() {
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="new-first">Newest First</SelectItem>
-                  <SelectItem value="old-first">Oldest First</SelectItem>
+                  {sortingOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.title}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </SidebarMenuItem>
@@ -95,10 +103,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               {!isMobile && (
-                <Button
-                  variant="default"
-                  className="hover: h-10 duration-200"
-                >
+                <Button variant="default" className="hover: h-10 duration-200">
                   Add a Note
                 </Button>
               )}
