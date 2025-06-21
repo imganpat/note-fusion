@@ -45,29 +45,19 @@ const Layout = () => {
   }, [username, navigate, dispatch]);
 
   return (
-    <>
-      <main className="relative flex h-dvh w-screen">
-        <div className="">
-          <SidebarProvider defaultOpen={defaultOpen === "true"}>
-            <AppSidebar />
-            <SidebarTrigger />
-          </SidebarProvider>
-        </div>
-        <div className="flex flex-grow flex-col">
-          <div className="flex flex-col">
-            <Nav />
-          </div>
-          <div className="h-full overflow-y-scroll">
-            {isMobile && (
-              <Button className="fixed bottom-4 right-4 z-50 h-10 w-10 rounded-full">
-                <Plus />
-              </Button>
-            )}
-            <Outlet />
-          </div>
-        </div>
+    <SidebarProvider defaultOpen={defaultOpen === "true"}>
+      <AppSidebar />
+      <SidebarTrigger />
+      <main className="max-h-dvh w-full">
+        <Nav />
+        <Outlet />
+        {isMobile && (
+          <Button className="fixed bottom-4 right-4 z-50 h-10 w-10 rounded-full">
+            <Plus />
+          </Button>
+        )}
       </main>
-    </>
+    </SidebarProvider>
   );
 };
 
