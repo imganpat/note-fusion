@@ -106,7 +106,7 @@ const MiniNote = ({ noteData }) => {
       <div
         ref={noteRef}
         id="noteRef"
-        className={`relative h-28 w-36 rounded px-2 py-1 text-sm sm:h-36 sm:w-44 md:h-52 md:w-64 md:rounded-xl md:px-5 md:pb-1 md:pt-4 md:text-base ${
+        className={`note-card relative h-28 w-36 rounded px-2 py-1 text-sm sm:h-36 sm:w-44 md:h-52 md:w-64 md:rounded-xl md:px-5 md:pb-1 md:pt-4 md:text-base ${
           noteData.is_complete
             ? "bg-blue-50 text-gray-400 line-through"
             : "bg-blue-100 text-blue-900"
