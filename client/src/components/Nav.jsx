@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import URL from "../constants/backend_url";
-import { clearAllNotes, sortNotes } from "../store/slices/notes_slice";
+import { clearAllNotes } from "../store/slices/notes_slice";
 import { useDispatch } from "react-redux";
 import {
   DropdownMenu,
@@ -13,62 +13,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
-import { Button } from "./ui/button";
-
-// links object for navigation
-const linksObject = [
-  {
-    name: "All",
-    slug: "/",
-  },
-  {
-    name: "Important",
-    slug: "/imp",
-  },
-  {
-    name: "Completed",
-    slug: "/complete",
-  },
-];
-
-const sortingOptions = [
-  {
-    name: "Newest first",
-    value: "new-first",
-  },
-  {
-    name: "Oldest first",
-    value: "old-first",
-  },
-];
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { LogOut, User } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Nav = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const profilePopupRef = useRef(); // profile popup ref for toggling visibility of profile popup on clicking profile icon
 
-  const [username, setUsername] = useState(
-    localStorage.getItem("username") || ""
-  );
-  const [userMail, setUserMail] = useState(localStorage.getItem("email") || "");
+  const isMobile = useIsMobile();
+
+  const [user, setuser] = useState({
+    name: localStorage.getItem("username") || "User",
+    email: localStorage.getItem("email") || "",
+  });
 
   const [profileBgColor, setProfileBgColor] = useState(
     localStorage.getItem("profile-bg-color") // accessing profile-bg-color cookie to set profile icon background color
   );
 
   useEffect(() => {
-    setUsername(username.slice(0, 1).toUpperCase() + username.slice(1)); // Capitalizing first letter of username and setting it to state
-    setUserMail(userMail); // setting user email to state
-  }, [username, userMail]);
+    // Capitalizing first letter of username and setting it to state
+    const username = localStorage.getItem("username") || "User";
+    const userMail = localStorage.getItem("email") || "";
+    setuser({
+      name: username.charAt(0).toUpperCase() + username.slice(1),
+      email: userMail,
+    });
+  }, [user]);
 
   const handleLogout = async () => {
     await axios.get(`${URL}/api/auth/logout`, {
@@ -81,38 +53,23 @@ const Nav = () => {
     navigate("/"); // redirecting to home page after logout
   };
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key == "Escape") profilePopupRef.current.classList.add("hidden");
-  });
-
-  document.addEventListener("click", (e) => {
-    profilePopupRef.current.classList.add("hidden");
-  });
-
-  const user = {
-    name: localStorage.getItem("username") || "User",
-    email: localStorage.getItem("email") || "",
-    avatar: "https://avatars.githubusercontent.com/u/12345678?v=4", // replace with actual avatar URL
-  };
-
-  const isMobile = false;
-
   return (
     <>
-      <div className="flex min-h-14 w-full items-center justify-end px-5 py-2 sm:px-4 md:px-6 lg:px-8">
+      <div className="sticky top-0 z-10 flex min-h-14 w-full items-center justify-end bg-secondary px-5 py-2 sm:px-4 md:px-6 lg:px-8">
         <div
           id="profile"
           className="flex h-full w-fit items-center justify-center gap-2"
         >
-          <span className="">Hello, {username}</span>
+          <span className="">Hello, {user.name}</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Avatar className="h-8 w-8 rounded-full">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">GC</AvatarFallback>
-                </Avatar>
-              </Button>
+              <Avatar className="h-8 w-8 rounded-full">
+                <AvatarFallback
+                  className={`rounded-lg text-white ${profileBgColor}`}
+                >
+                  {user.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className="w-(--radix-dropdown-menu-trigger-width) mt-8 min-w-56 rounded-lg"
@@ -123,8 +80,11 @@ const Nav = () => {
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-full">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    <AvatarFallback
+                      className={`rounded-lg text-white ${profileBgColor}`}
+                    >
+                      {user.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">{user.name}</span>
@@ -134,83 +94,22 @@ const Nav = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <Sparkles />
-                  Upgrade to Pro
+                <NavLink to="/profile">
+                  <DropdownMenuItem className="cursor-pointer">
+                    <User /> <span>View profile</span>
+                  </DropdownMenuItem>
+                </NavLink>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  <LogOut /> <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <BadgeCheck />
-                  Account
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CreditCard />
-                  Billing
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Bell />
-                  Notifications
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOut />
-                Log out
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
-
-      {/* Navigation links for mobile view only */}
-      <nav className="mx-4 my-3 flex gap-4 text-sm sm:hidden">
-        <select
-          name="nav-links"
-          className="rounded-md border px-2 py-2 text-sm text-gray-700 outline-none sm:px-4"
-          defaultValue={window.location.pathname}
-          onChange={(e) => {
-            const selectedSlug = e.target.value;
-            if (selectedSlug) {
-              navigate(selectedSlug);
-            }
-          }}
-        >
-          {linksObject.map((li) => {
-            return (
-              <option
-                key={li.slug}
-                value={li.slug}
-                className="cursor-pointer capitalize"
-              >
-                {li.name}
-              </option>
-            );
-          })}
-        </select>
-
-        <select
-          name="sorting-order"
-          className="rounded-md border px-2 py-2 text-sm text-gray-700 outline-none sm:px-4"
-          defaultValue={localStorage.getItem("sortBy") || "old-first"}
-          onChange={(e) => {
-            dispatch(sortNotes({ sortBy: e.target.value }));
-          }}
-        >
-          {sortingOptions.map((li) => {
-            return (
-              <option
-                key={li.value}
-                value={li.value}
-                className="cursor-pointer capitalize"
-              >
-                {li.name}
-              </option>
-            );
-          })}
-        </select>
-      </nav>
     </>
   );
 };
