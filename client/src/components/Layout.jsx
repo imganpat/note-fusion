@@ -6,9 +6,6 @@ import { setLoading, sortNotes } from "../store/slices/notes_slice";
 import { getAllNotes } from "../store/thunks/notes_thunk";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Button } from "./ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Plus } from "lucide-react";
 import { getCookie } from "@/lib/utils";
 
 // Function to initialize the store woth the user notes
@@ -35,7 +32,6 @@ const Layout = () => {
 
   // const defaultOpen = document.cookie.split("sidebar_state=")[1];
   const defaultOpen = getCookie("sidebar_state");
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const path = window.location.pathname;
@@ -49,15 +45,10 @@ const Layout = () => {
   return (
     <SidebarProvider defaultOpen={defaultOpen === "true"}>
       <AppSidebar />
-      <SidebarTrigger />
-      <main className="max-h-dvh w-full">
+      <main className="relative max-h-dvh w-full">
         <Nav />
+        <SidebarTrigger className="fixed top-2 z-20" />
         <Outlet />
-        {isMobile && (
-          <Button className="fixed bottom-4 right-4 z-50 h-10 w-10 rounded-full">
-            <Plus />
-          </Button>
-        )}
       </main>
     </SidebarProvider>
   );

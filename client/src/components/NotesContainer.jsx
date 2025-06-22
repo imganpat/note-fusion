@@ -4,10 +4,13 @@ import { useSelector } from "react-redux";
 import { gsap } from "gsap";
 import Flip from "gsap/Flip";
 import { getCookie } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "./ui/button";
+import { Plus } from "lucide-react";
 
 gsap.registerPlugin(Flip);
 
-const NotesContainer = ({ category = "all" }) => {
+const NotesContainer = ({ category }) => {
   //   // getting notes and isLoading from redux store
   const isLoading = useSelector((state) => state.notes.isLoading);
   const notes = useSelector((state) => state.notes.notes);
@@ -54,6 +57,7 @@ const NotesContainer = ({ category = "all" }) => {
   };
 
   const filteredNotes = getFilteredNotes();
+  const isMobile = useIsMobile();
 
   return (
     <>
@@ -65,7 +69,7 @@ const NotesContainer = ({ category = "all" }) => {
       ) : (
         <div
           ref={containerRef}
-          className="flex flex-wrap justify-start gap-4 px-2"
+          className="flex flex-wrap justify-start gap-4 px-4"
         >
           {/* Checking if the notes are present or not */}
           {filteredNotes.length <= 0 ? (
@@ -78,6 +82,11 @@ const NotesContainer = ({ category = "all" }) => {
             ))
           )}
         </div>
+      )}
+      {isMobile && (
+        <Button className="fixed bottom-4 right-4 z-50 h-10 w-10 rounded-full">
+          <Plus />
+        </Button>
       )}
     </>
   );
