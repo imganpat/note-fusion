@@ -21,6 +21,8 @@ import {
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { sortNotes } from "@/store/slices/notes_slice";
 
 const navigationOptions = [
   {
@@ -48,8 +50,15 @@ const sortingOptions = [
   },
 ];
 
+const handleSort = (dispatch, value) => {
+  console.log(`Sorting notes by: ${value}`);
+  localStorage.setItem("sort-by", value);
+  dispatch(sortNotes({ sortBy: value }));
+};
+
 export function AppSidebar() {
   const isMobile = useIsMobile();
+  const dispatch = useDispatch();
   return (
     <Sidebar>
       <SidebarHeader>
@@ -82,9 +91,14 @@ export function AppSidebar() {
           <SidebarGroupLabel>Sort</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Select>
+              <Select
+                defaultValue={localStorage.getItem("sort-by") || "new-first"}
+                onValueChange={(value) => {
+                  handleSort(dispatch, value);
+                }}
+              >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Sort by" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {sortingOptions.map((option) => (
