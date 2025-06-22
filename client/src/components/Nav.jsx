@@ -40,7 +40,7 @@ const Nav = () => {
       name: username.charAt(0).toUpperCase() + username.slice(1),
       email: userMail,
     });
-  }, [user]);
+  }, []);
 
   const handleLogout = async () => {
     await axios.get(`${URL}/api/auth/logout`, {
