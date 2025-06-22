@@ -9,6 +9,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Plus } from "lucide-react";
+import { getCookie } from "@/lib/utils";
 
 // Function to initialize the store woth the user notes
 const fetchDataAndDispatch = async (dispatch, navigate) => {
@@ -32,7 +33,8 @@ const Layout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const defaultOpen = document.cookie.split("sidebar_state=")[1];
+  // const defaultOpen = document.cookie.split("sidebar_state=")[1];
+  const defaultOpen = getCookie("sidebar_state");
   const isMobile = useIsMobile();
 
   useEffect(() => {
