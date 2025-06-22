@@ -1,12 +1,59 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
 import MiniNote from "./MiniNote";
+import { useSelector } from "react-redux";
+import { gsap } from "gsap";
+import Flip from "gsap/Flip";
+import { getCookie } from "@/lib/utils";
 
-const NotesContainer = () => {
+gsap.registerPlugin(Flip);
+
+const NotesContainer = ({ category = "all" }) => {
+  //   // getting notes and isLoading from redux store
   const isLoading = useSelector((state) => state.notes.isLoading);
+  const notes = useSelector((state) => state.notes.notes);
 
-  // getting notes from redux store
-  const note = useSelector((state) => state.notes.notes);
+  const containerRef = useRef(null);
+  const [sidebarOpen, setSidebarOpen] = useState(
+    getCookie("sidebar_state") === "true"
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const current = getCookie("sidebar_state") === "true";
+      setSidebarOpen((prev) => (prev !== current ? current : prev));
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const cards = containerRef.current.querySelectorAll(".note-card");
+    const state = Flip.getState(cards);
+
+    requestAnimationFrame(() => {
+      Flip.from(state, {
+        duration: 0.2,
+        ease: "ease",
+        stagger: 0.02,
+      });
+    });
+  }, [sidebarOpen]);
+
+  // Filtering Logic
+  const getFilteredNotes = () => {
+    switch (category) {
+      case "important":
+        return notes.filter((note) => note.is_important);
+      case "completed":
+        return notes.filter((note) => note.is_complete);
+      case "all":
+      default:
+        return notes;
+    }
+  };
+
+  const filteredNotes = getFilteredNotes();
 
   return (
     <>
@@ -16,16 +63,19 @@ const NotesContainer = () => {
           <p className="animate-pulse">Loading...</p>
         </div>
       ) : (
-        <div className="flex flex-wrap justify-start gap-4 px-4 md:p-8">
+        <div
+          ref={containerRef}
+          className="flex flex-wrap justify-start gap-4 px-2"
+        >
           {/* Checking if the notes are present or not */}
-          {note.length <= 0 ? (
+          {filteredNotes.length <= 0 ? (
             <h1 className="text-2xl text-blue-600">
-              Your notes will appear here
+              No {category} notes to show
             </h1>
           ) : (
-            note.map((n) => {
-              return <MiniNote key={n.uid} noteData={n} />;
-            })
+            filteredNotes.map((note) => (
+              <MiniNote key={note.uid} noteData={note} />
+            ))
           )}
         </div>
       )}
