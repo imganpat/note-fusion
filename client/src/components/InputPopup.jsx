@@ -93,7 +93,6 @@ const InputPopup = () => {
     }
   }, [isEditing, currentNote]);
 
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
@@ -121,6 +120,7 @@ const InputPopup = () => {
             <span className="my-4 flex items-center space-x-2">
               <Checkbox
                 id="important"
+                disabled={loading || (!title.trim() && !description.trim())} // Disable checkbot if the on loading and if title and description are empty
                 onChange={() => setIsImportant(!is_important)}
               />
               <Label htmlFor="important" className="cursor-pointer">
@@ -129,7 +129,7 @@ const InputPopup = () => {
             </span>
             <Button
               className="h-10 w-full px-8"
-              disabled={loading || (!title.trim() && !description.trim())} // Disable button if title and description are empty
+              disabled={loading || (!title.trim() && !description.trim())} // Disabling the button
               onClick={async () => {
                 await handleAddOrUpdateNote(
                   setOpen,
@@ -147,10 +147,12 @@ const InputPopup = () => {
             >
               {loading ? (
                 <span className="flex items-center gap-1">
-                  <Loader2Icon className="h-40 w-40 animate-spin" />
+                  {/* display loading spinner along with the operation performed message */}
+                  <Loader2Icon className="animate-spin" />
                   {isEditing ? "Editing..." : "Adding..."}
                 </span>
               ) : isEditing ? (
+                // changing the button tect based on the operation
                 "Update"
               ) : (
                 "Add"
