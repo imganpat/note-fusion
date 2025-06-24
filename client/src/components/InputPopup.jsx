@@ -93,6 +93,16 @@ const InputPopup = () => {
     }
   }, [isEditing, currentNote]);
 
+  //clearing the previous values when the open state changes
+  useEffect(() => {
+    return () => {
+      setTitle("");
+      setDescription("");
+      setIsImportant(false);
+      setIsCompleted(false);
+    };
+  }, [open]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
