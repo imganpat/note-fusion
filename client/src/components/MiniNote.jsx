@@ -19,9 +19,9 @@ import {
   StarIcon,
   ShareIcon,
 } from "../../public/assets/svgs/index.jsx";
-import { openPopUp } from "../store/slices/popup_slice.js";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useInputPopup } from "@/context/InputPopupContext.jsx";
 
 const MiniNote = ({ noteData }) => {
   const dispatch = useDispatch();
@@ -42,6 +42,8 @@ const MiniNote = ({ noteData }) => {
   );
 
   utilityBtnRefs.current = [];
+
+  const { openPopup } = useInputPopup();
 
   useEffect(() => {
     setImportant(noteData.is_important);
@@ -158,17 +160,15 @@ const MiniNote = ({ noteData }) => {
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
               onClick={(e) => {
                 e.preventDefault(); // Prevent navigation
-                dispatch(
-                  openPopUp({
-                    isEditing: true,
-                    currentNote: {
-                      uid: noteData.uid,
-                      title: noteData.title,
-                      description: noteData.description,
-                      is_important: noteData.is_important,
-                    },
-                  })
-                );
+                openPopup({
+                  mode: "edit",
+                  currentNote: {
+                    uid: noteData.uid,
+                    title: noteData.title,
+                    description: noteData.description,
+                    is_important: noteData.is_important,
+                  },
+                });
                 toggleMenu(e);
               }}
             >
