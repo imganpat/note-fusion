@@ -7,6 +7,7 @@ import { getAllNotes } from "../store/thunks/notes_thunk";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { getCookie } from "@/lib/utils";
+import { InputPopupProvider } from "@/context/InputPopupContext";
 
 // Function to initialize the store woth the user notes
 const fetchDataAndDispatch = async (dispatch, navigate) => {
@@ -44,12 +45,14 @@ const Layout = () => {
 
   return (
     <SidebarProvider defaultOpen={defaultOpen === "true"}>
-      <AppSidebar />
-      <main className="relative max-h-dvh w-full">
-        <Nav />
-        <SidebarTrigger className="fixed top-2 z-20" />
-        <Outlet />
-      </main>
+      <InputPopupProvider>
+        <AppSidebar />
+        <main className="relative max-h-dvh w-full">
+          <Nav />
+          <SidebarTrigger className="fixed top-2 z-20" />
+          <Outlet />
+        </main>
+      </InputPopupProvider>
     </SidebarProvider>
   );
 };
