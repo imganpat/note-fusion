@@ -5,8 +5,7 @@ import { gsap } from "gsap";
 import Flip from "gsap/Flip";
 import { getCookie } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
+import InputPopup from "./InputPopup";
 
 gsap.registerPlugin(Flip);
 
@@ -83,11 +82,7 @@ const NotesContainer = ({ category }) => {
           )}
         </div>
       )}
-      {isMobile && (
-        <Button className="fixed bottom-4 right-4 z-50 h-10 w-10 rounded-full">
-          <Plus />
-        </Button>
-      )}
+      {isMobile && <InputPopup />}
     </>
   );
 };
