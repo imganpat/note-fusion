@@ -18,11 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { sortNotes } from "@/store/slices/notes_slice";
+import InputPopup from "./InputPopup";
 
 const navigationOptions = [
   {
@@ -51,7 +51,6 @@ const sortingOptions = [
 ];
 
 const handleSort = (dispatch, value) => {
-  console.log(`Sorting notes by: ${value}`);
   localStorage.setItem("sort-by", value);
   dispatch(sortNotes({ sortBy: value }));
 };
@@ -116,11 +115,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              {!isMobile && (
-                <Button variant="default" className="hover: h-10 duration-200">
-                  Add a Note
-                </Button>
-              )}
+              {!isMobile && <InputPopup />}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
