@@ -112,7 +112,7 @@ const Note = () => {
   }, [uid]);
 
   return (
-    <div className="absolute left-0 top-0 z-50 flex h-dvh w-screen flex-col items-center justify-center bg-black bg-opacity-70 py-2 sm:py-6 md:py-8 lg:py-8">
+    <div className="absolute left-0 top-0 z-50 flex h-dvh w-dvw flex-col items-center justify-center bg-black bg-opacity-70 py-2 sm:py-6 md:py-8 lg:py-8">
       <div className="relative flex max-h-fit w-11/12 flex-grow flex-col overflow-y-auto overflow-x-hidden rounded-lg bg-gray-100 shadow lg:w-3/5">
         {important != 0 && (
           <div className="absolute right-2 top-1 z-auto md:right-5 md:top-3">
