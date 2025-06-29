@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Nav from "./Nav";
 import { useDispatch } from "react-redux";
 import { setLoading, sortNotes } from "../store/slices/notes_slice";
@@ -30,8 +30,8 @@ const Layout = () => {
   const username = localStorage.getItem("username");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // const defaultOpen = document.cookie.split("sidebar_state=")[1];
   const defaultOpen = getCookie("sidebar_state");
 
   useEffect(() => {
@@ -42,6 +42,18 @@ const Layout = () => {
       fetchDataAndDispatch(dispatch, navigate);
     }
   }, [username, navigate, dispatch]);
+
+  // Hide sidebar on a single note page
+  const isNotePage = location.pathname.startsWith("/note/");
+
+  if (isNotePage) {
+    return (
+      <main className="relative max-h-dvh w-full">
+        <Nav />
+        <Outlet />
+      </main>
+    );
+  }
 
   return (
     <SidebarProvider defaultOpen={defaultOpen === "true"}>
