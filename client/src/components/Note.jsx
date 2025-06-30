@@ -18,6 +18,8 @@ import {
   toggleCompletion,
   editNote,
 } from "../store/thunks/notes_thunk";
+import { AlertDialog, AlertDialogTrigger } from "./ui/alert-dialog";
+import ConfirmDialog from "./ConfirmDialog";
 
 const fetchNote = async (
   uid,
@@ -204,13 +206,21 @@ const Note = () => {
                       <DisableCheckIcon color={"#000"} />
                     )}
                   </div>
-                  <div
-                    data-tooltip-id="del-btn"
-                    className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-transparent p-2 hover:border-neutral-500"
-                    onClick={() => handleDelete(dispatch, note.uid, navigate)}
-                  >
-                    <DeleteIcon color={"#000"} />
-                  </div>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger
+                      data-tooltip-id="del-btn"
+                      className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-transparent p-2 hover:border-neutral-500"
+                    >
+                      <DeleteIcon color={"#000"} />
+                    </AlertDialogTrigger>
+                    <ConfirmDialog
+                      onConfirm={() =>
+                        handleDelete(dispatch, note.uid, navigate)
+                      }
+                    />
+                  </AlertDialog>
+
                   <div
                     data-tooltip-id="share-btn"
                     className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-transparent p-2 hover:border-neutral-500"
