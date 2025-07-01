@@ -22,6 +22,35 @@ import {
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useInputPopup } from "@/context/InputPopupContext.jsx";
+import { AlertDialog, AlertDialogTrigger } from "./ui/alert-dialog.jsx";
+import ConfirmDialog from "./ConfirmDialog.jsx";
+
+const handleShare = async (uid) => {
+  if (navigator.share)
+    try {
+      await navigator.share({
+        url: `${window.location.href}note/${uid}`,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  else alert("Sharing is not supported on this browser.");
+};
+
+const handleDelete = async (noteRef, dispatch, uid) => {
+  gsap.to(noteRef.current, {
+    opacity: 0,
+    scale: 0.9,
+    left: 50,
+    display: "none",
+    duration: 0.2,
+    ease: "power2.out",
+    onComplete: async () => {
+      await dispatch(deleteNote(uid));
+      toggleMenu();
+    },
+  });
+};
 
 const MiniNote = ({ noteData }) => {
   const dispatch = useDispatch();
@@ -89,18 +118,6 @@ const MiniNote = ({ noteData }) => {
     menuRef.current.classList.toggle("hidden");
     setIsMenuOpen(!isMenuOpen);
     toggleAnimation();
-  };
-
-  const handleShare = async (uid) => {
-    if (navigator.share)
-      try {
-        await navigator.share({
-          url: `${window.location.href}note/${uid}`,
-        });
-      } catch (error) {
-        console.error("Error sharing:", error);
-      }
-    else alert("Sharing is not supported on this browser.");
   };
 
   return (
@@ -205,27 +222,30 @@ const MiniNote = ({ noteData }) => {
             </div>
 
             {/* Delete button */}
-            <div
-              data-tooltip-id="del-btn"
-              ref={addToRefs}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-              onClick={(e) => {
-                e.preventDefault(); // Prevent navigation
-                gsap.to(noteRef.current, {
-                  opacity: 0,
-                  scale: 0.9,
-                  left: 50,
-                  duration: 0.3,
-                  display: "none",
-                  onComplete: () => {
-                    dispatch(deleteNote(noteData.uid));
-                    toggleMenu(e);
-                  },
-                });
-              }}
-            >
-              <DeleteIcon />
-            </div>
+            <AlertDialog>
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation(); // This stops the full-screen view from triggering
+                }}
+              >
+                <AlertDialogTrigger
+                  data-tooltip-id="del-btn"
+                  ref={addToRefs}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
+                >
+                  <DeleteIcon />
+                </AlertDialogTrigger>
+              </div>
+
+              <ConfirmDialog
+                onConfirm={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleDelete(noteRef, dispatch, noteData.uid);
+                }}
+              />
+            </AlertDialog>
 
             {/* Share button */}
             <div
