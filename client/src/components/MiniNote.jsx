@@ -59,6 +59,7 @@ const MiniNote = ({ noteData }) => {
   const noteRef = useRef(null);
   const utilityBtnRefs = useRef([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const hasAnimated = useSelector((state) => state.notes.hasAnimated);
   const [important, setImportant] = useState(noteData.is_important);
   const formatedDate = new Date(noteData.created_at).toLocaleDateString(
@@ -222,26 +223,28 @@ const MiniNote = ({ noteData }) => {
             </div>
 
             {/* Delete button */}
-            <AlertDialog>
+            <AlertDialog open={false} onOpenChange={setOpen}>
               <div
                 onClick={(e) => {
                   e.preventDefault();
-                  e.stopPropagation(); // This stops the full-screen view from triggering
+                  e.stopPropagation();
                 }}
               >
                 <AlertDialogTrigger
                   data-tooltip-id="del-btn"
                   ref={addToRefs}
                   className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
+                  onClick={() => setOpen(true)}
                 >
                   <DeleteIcon />
                 </AlertDialogTrigger>
               </div>
-
               <ConfirmDialog
+                setOpen={setOpen}
                 onConfirm={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  setOpen(false);
                   handleDelete(noteRef, dispatch, noteData.uid);
                 }}
               />
