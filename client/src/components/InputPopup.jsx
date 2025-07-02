@@ -115,6 +115,7 @@ const InputPopup = () => {
                 onChange={(e) => setTitle(e.target.value)}
               />
               <Textarea
+                autoFocus
                 placeholder="Enter your note here"
                 className="!focus:outline-none !focus:ring-0 !focus:border-none min-h-40 !border-none px-0 !text-base !outline-none !ring-0"
                 ref={descriptionRef}
