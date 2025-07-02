@@ -126,6 +126,7 @@ const InputPopup = () => {
               <span className="my-4 flex items-center space-x-2">
                 <Checkbox
                   id="important"
+                  checked={is_important}
                   disabled={loading || (!title.trim() && !description.trim())} // Disable checkbot if the on loading and if title and description are empty
                   onChange={() => setIsImportant(!is_important)}
                 />
