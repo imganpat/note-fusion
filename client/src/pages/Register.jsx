@@ -2,6 +2,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../../src/constants/backend_url";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2Icon } from "lucide-react";
 
 const URL = `${backendUrl}/api/auth`;
 
@@ -66,104 +70,91 @@ const Register = () => {
             <div className="h-2/5 w-full"></div>
           </div>
           <div className="h-full w-96 py-3 lg:w-1/2 lg:py-0">
-            <form onSubmit={handleSubmit}>
-              <div className="flex h-96 w-full flex-col gap-3 p-2 lg:h-full lg:p-4">
-                <div className="relative mb-2">
-                  <h2 className="text-center text-3xl font-semibold text-gray-700 lg:mb-2 lg:text-start">
-                    Register
-                  </h2>
-                  <p className="text-center text-gray-500 lg:text-start">
-                    Create your account here
-                  </p>
-                </div>
-                <div className="w-full">
-                  <label
-                    className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-700"
-                    htmlFor="email"
-                  >
-                    Email
-                  </label>
-                  <input
-                    className="w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+            <form
+              onSubmit={handleSubmit}
+              className="flex h-full w-full flex-col gap-6 p-4"
+            >
+              <div className="flex flex-col gap-2">
+                <h1 className="text-2xl font-bold">Register a new account</h1>
+                <p className="text-balance text-sm text-muted-foreground">
+                  Enter your details below to create your account
+                </p>
+              </div>
+              <div className="grid gap-6">
+                <div className="grid gap-3">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
                     id="email"
                     type="email"
-                    required
                     placeholder="e.g. example@gmail.com"
+                    required
                     value={user.email}
                     onChange={(e) => {
-                      setUser({ ...user, email: e.target.value });
-                      setError("");
+                      setUser({
+                        ...user,
+                        email: e.target.value.trim().toLowerCase(),
+                      });
+                      setError(""); // Clear error on input change
                     }}
                   />
                 </div>
-                <div className="w-full">
-                  <label
-                    className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-700"
-                    htmlFor="username"
-                  >
-                    Username
-                  </label>
-                  <input
-                    className="w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                <div className="grid gap-3">
+                  <Label htmlFor="username">Username</Label>
+                  <Input
                     id="username"
                     type="text"
-                    required
                     placeholder="e.g. jhon123"
+                    required
                     value={user.username}
                     onChange={(e) => {
                       setUser({
                         ...user,
                         username: e.target.value.trim().toLowerCase(),
                       });
-                      setError("");
+                      setError(""); // Clear error on input change
                     }}
                   />
                 </div>
-                <div className="w-full">
-                  <label
-                    className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-700"
-                    htmlFor="password"
-                  >
-                    Password
-                  </label>
-                  <input
-                    className="w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                <div className="grid gap-3">
+                  <div className="flex items-center">
+                    <Label htmlFor="password">Password</Label>
+                  </div>
+                  <Input
                     id="password"
                     type="password"
                     required
-                    placeholder="********"
                     value={user.password}
                     onChange={(e) => {
-                      setUser({ ...user, password: e.target.value });
                       setError("");
+                      setUser({ ...user, password: e.target.value });
                     }}
                   />
                 </div>
-                {error && <p className="text-red-500">{error}</p>}{" "}
                 {/* Display error if any */}
+                {error && <p className="text-red-500">{error}</p>}{" "}
                 {success && <p className="text-green-500">{success}</p>}{" "}
-                {/* Display success message */}
-                <button
-                  disabled={registerLoading} // disable the button if loading is true
-                  className="focus:shadow-outline h-10 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none disabled:bg-slate-400"
+                <Button
                   type="submit"
+                  className="w-full"
+                  disabled={registerLoading} // disable the button if loading is true
                 >
                   {/* Show loading spinner if loading is true */}
                   {registerLoading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
-                    </div>
+                    <Loader2Icon className="animate-spin" />
                   ) : (
                     // Show sign up text if loading is false
                     "Sign up"
                   )}
-                </button>
-                <p className="mt- text-center">
-                  Already have an account?{" "}
-                  <strong className="cursor-pointer text-blue-500">
-                    <Link to={"/auth/login"}> Login </Link>
-                  </strong>
-                </p>
+                </Button>
+              </div>
+              <div className="text-center text-sm">
+                Already have an account?{" "}
+                <Link
+                  to={"/auth/login"}
+                  className="underline underline-offset-4"
+                >
+                  Login
+                </Link>
               </div>
             </form>
           </div>
