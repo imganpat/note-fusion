@@ -16,6 +16,8 @@ import {
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { LogOut, User } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { AlertDialog } from "./ui/alert-dialog";
+import ConfirmDialog from "./ConfirmDialog";
 
 const Nav = () => {
   const navigate = useNavigate();
@@ -31,6 +33,8 @@ const Nav = () => {
   const [profileBgColor, setProfileBgColor] = useState(
     localStorage.getItem("profile-bg-color") // accessing profile-bg-color cookie to set profile icon background color
   );
+
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
   useEffect(() => {
     // Capitalizing first letter of username and setting it to state
@@ -101,15 +105,26 @@ const Nav = () => {
                 </NavLink>
                 <DropdownMenuItem
                   className="cursor-pointer"
-                  onClick={handleLogout}
+                  onClick={() => setIsLogoutDialogOpen(true)}
                 >
-                  <LogOut /> <span>Log out</span>
+                  <LogOut /> Logout
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
+      <AlertDialog
+        open={isLogoutDialogOpen}
+        onOpenChange={setIsLogoutDialogOpen}
+      >
+        <ConfirmDialog
+          title="Confirm Logout"
+          description="Are you sure you want to log out?"
+          confirmText="Logout"
+          onConfirm={handleLogout}
+        />
+      </AlertDialog>
     </>
   );
 };
