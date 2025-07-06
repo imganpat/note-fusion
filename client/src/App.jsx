@@ -1,7 +1,5 @@
 import React from "react";
 import NotesContainer from "./components/NotesContainer";
-import Input from "./components/Input";
-import { useSelector } from "react-redux";
 import { Tooltip } from "react-tooltip";
 import {
   Route,
@@ -39,12 +37,9 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  const isPopUpOpen = useSelector((state) => state.popup.isPopupOpen);
-
   return (
     <>
       <RouterProvider router={router}></RouterProvider>
-      {isPopUpOpen && <Input />}
       <Tooltip className="z-50" id="edit-btn" place="top" content="Edit note" />
       <Tooltip
         className="z-50"
