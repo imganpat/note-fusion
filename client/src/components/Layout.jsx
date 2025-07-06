@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Nav from "./Nav";
-import Sidebar from "./Sidebar";
 import { useDispatch } from "react-redux";
 import { setLoading, sortNotes } from "../store/slices/notes_slice";
 import { getAllNotes } from "../store/thunks/notes_thunk";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { getCookie } from "@/lib/utils";
+import { InputPopupProvider } from "@/context/InputPopupContext";
 
 // Function to initialize the store woth the user notes
 const fetchDataAndDispatch = async (dispatch, navigate) => {
@@ -27,6 +30,9 @@ const Layout = () => {
   const username = localStorage.getItem("username");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const defaultOpen = getCookie("sidebar_state");
 
   useEffect(() => {
     const path = window.location.pathname;
@@ -37,22 +43,29 @@ const Layout = () => {
     }
   }, [username, navigate, dispatch]);
 
-  return (
-    <>
-      <main className="relative flex h-dvh w-screen">
-        <div className="">
-          <Sidebar />
-        </div>
-        <div className="flex flex-grow flex-col">
-          <div className="flex flex-col">
-            <Nav />
-          </div>
-          <div className="h-full overflow-y-scroll">
-            <Outlet />
-          </div>
-        </div>
+  // Hide sidebar on a single note page
+  const isNotePage = location.pathname.startsWith("/note/");
+
+  if (isNotePage) {
+    return (
+      <main className="relative max-h-dvh w-full">
+        <Nav />
+        <Outlet />
       </main>
-    </>
+    );
+  }
+
+  return (
+    <SidebarProvider defaultOpen={defaultOpen === "true"}>
+      <InputPopupProvider>
+        <AppSidebar />
+        <main className="relative max-h-dvh w-full">
+          <Nav />
+          <SidebarTrigger className="fixed top-2 z-20" />
+          <Outlet />
+        </main>
+      </InputPopupProvider>
+    </SidebarProvider>
   );
 };
 

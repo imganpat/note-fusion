@@ -4,6 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import backendUrl from "../constants/backend_url.js";
 import { setLoading } from "../store/slices/notes_slice.js";
 import { useDispatch } from "react-redux";
+import { Label } from "@/components/ui/label.jsx";
+import { Input } from "@/components/ui/input.jsx";
+import { Button } from "@/components/ui/button.jsx";
+import { Loader2Icon } from "lucide-react";
 
 // Setting the url for authentication
 const URL = `${backendUrl}/api/auth`;
@@ -96,29 +100,26 @@ const Login = () => {
             </div>
             <div className="h-2/5 w-full"></div>
           </div>
-          <div className="h-full w-96 py-3 lg:w-1/2 lg:py-0">
-            <form onSubmit={handleLogin}>
-              <div className="flex h-96 w-full flex-col gap-3 p-2 lg:h-full lg:p-4">
-                <div className="relative mb-2">
-                  <h2 className="text-center text-3xl font-semibold text-gray-700 lg:mb-2 lg:text-start">
-                    Login
-                  </h2>
-                  <p className="text-center text-gray-500 lg:text-start">
-                    Get back to your account
-                  </p>
-                </div>
-                <div className="w-full">
-                  <label
-                    className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-700"
-                    htmlFor="username"
-                  >
-                    Username
-                  </label>
-                  <input
-                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+
+          <div className="flex h-full w-96 flex-col items-center justify-center py-3 lg:w-1/2 lg:py-0">
+            <form
+              onSubmit={handleLogin}
+              className="flex h-full w-full flex-col gap-6 p-4"
+            >
+              <div className="flex flex-col gap-2">
+                <h1 className="text-2xl font-bold">Login to your account</h1>
+                <p className="text-balance text-sm text-muted-foreground">
+                  Enter your credentials below to login to your account
+                </p>
+              </div>
+              <div className="grid gap-6">
+                <div className="grid gap-3">
+                  <Label htmlFor="username">Username</Label>
+                  <Input
                     id="username"
                     type="text"
                     placeholder="e.g. jhon123"
+                    required
                     value={user.username}
                     onChange={(e) => {
                       setUser({
@@ -129,18 +130,14 @@ const Login = () => {
                     }}
                   />
                 </div>
-                <div className="w-full">
-                  <label
-                    className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-700"
-                    htmlFor="password"
-                  >
-                    Password
-                  </label>
-                  <input
-                    className="mb-3 w-full appearance-none rounded border-2 border-gray-200 px-4 py-2 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
+                <div className="grid gap-3">
+                  <div className="flex items-center">
+                    <Label htmlFor="password">Password</Label>
+                  </div>
+                  <Input
                     id="password"
                     type="password"
-                    placeholder="********"
+                    required
                     value={user.password}
                     onChange={(e) => {
                       setError("");
@@ -150,27 +147,28 @@ const Login = () => {
                 </div>
                 {/* Display error if any */}
                 {error && <p className="text-red-500">{error}</p>}{" "}
-                <button
-                  disabled={loginLoading} // disable the button if loading is true
-                  className="focus:shadow-outline h-10 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none disabled:bg-slate-400"
+                <Button
                   type="submit"
+                  className="w-full"
+                  disabled={loginLoading} // disable the button if loading is true
                 >
                   {/* Show loading spinner if loading is true */}
                   {loginLoading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
-                    </div>
+                    <Loader2Icon className="animate-spin" />
                   ) : (
                     // Show login text if loading is false
                     "Log in"
                   )}
-                </button>
-                <p className="mt-3 text-center">
-                  Don't have an account?{" "}
-                  <strong className="cursor-pointer text-blue-500">
-                    <Link to={"/auth/register"}>Sign Up</Link>
-                  </strong>
-                </p>
+                </Button>
+              </div>
+              <div className="text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <Link
+                  to={"/auth/register"}
+                  className="underline underline-offset-4"
+                >
+                  Sign up
+                </Link>
               </div>
             </form>
           </div>

@@ -19,9 +19,38 @@ import {
   StarIcon,
   ShareIcon,
 } from "../../public/assets/svgs/index.jsx";
-import { openPopUp } from "../store/slices/popup_slice.js";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useInputPopup } from "@/context/InputPopupContext.jsx";
+import { AlertDialog, AlertDialogTrigger } from "./ui/alert-dialog.jsx";
+import ConfirmDialog from "./ConfirmDialog.jsx";
+
+const handleShare = async (uid) => {
+  if (navigator.share)
+    try {
+      await navigator.share({
+        url: `${window.location.href}note/${uid}`,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  else alert("Sharing is not supported on this browser.");
+};
+
+const handleDelete = async (noteRef, dispatch, uid) => {
+  gsap.to(noteRef.current, {
+    opacity: 0,
+    scale: 0.9,
+    left: 50,
+    display: "none",
+    duration: 0.2,
+    ease: "power2.out",
+    onComplete: async () => {
+      await dispatch(deleteNote(uid));
+      toggleMenu();
+    },
+  });
+};
 
 const MiniNote = ({ noteData }) => {
   const dispatch = useDispatch();
@@ -30,6 +59,7 @@ const MiniNote = ({ noteData }) => {
   const noteRef = useRef(null);
   const utilityBtnRefs = useRef([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const hasAnimated = useSelector((state) => state.notes.hasAnimated);
   const [important, setImportant] = useState(noteData.is_important);
   const formatedDate = new Date(noteData.created_at).toLocaleDateString(
@@ -42,6 +72,8 @@ const MiniNote = ({ noteData }) => {
   );
 
   utilityBtnRefs.current = [];
+
+  const { openPopup } = useInputPopup();
 
   useEffect(() => {
     setImportant(noteData.is_important);
@@ -89,24 +121,12 @@ const MiniNote = ({ noteData }) => {
     toggleAnimation();
   };
 
-  const handleShare = async (uid) => {
-    if (navigator.share)
-      try {
-        await navigator.share({
-          url: `${window.location.href}note/${uid}`,
-        });
-      } catch (error) {
-        console.error("Error sharing:", error);
-      }
-    else alert("Sharing is not supported on this browser.");
-  };
-
   return (
     <Link to={`/note/${noteData.uid}`} className="block">
       <div
         ref={noteRef}
         id="noteRef"
-        className={`relative h-28 w-36 rounded px-2 py-1 text-sm sm:h-36 sm:w-44 md:h-52 md:w-64 md:rounded-xl md:px-5 md:pb-1 md:pt-4 md:text-base ${
+        className={`note-card relative h-28 w-36 rounded px-2 py-1 text-sm sm:h-36 sm:w-44 md:h-52 md:w-64 md:rounded-xl md:px-5 md:pb-1 md:pt-4 md:text-base ${
           noteData.is_complete
             ? "bg-blue-50 text-gray-400 line-through"
             : "bg-blue-100 text-blue-900"
@@ -158,17 +178,15 @@ const MiniNote = ({ noteData }) => {
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
               onClick={(e) => {
                 e.preventDefault(); // Prevent navigation
-                dispatch(
-                  openPopUp({
-                    isEditing: true,
-                    currentNote: {
-                      uid: noteData.uid,
-                      title: noteData.title,
-                      description: noteData.description,
-                      is_important: noteData.is_important,
-                    },
-                  })
-                );
+                openPopup({
+                  mode: "edit",
+                  currentNote: {
+                    uid: noteData.uid,
+                    title: noteData.title,
+                    description: noteData.description,
+                    is_important: noteData.is_important,
+                  },
+                });
                 toggleMenu(e);
               }}
             >
@@ -205,27 +223,32 @@ const MiniNote = ({ noteData }) => {
             </div>
 
             {/* Delete button */}
-            <div
-              data-tooltip-id="del-btn"
-              ref={addToRefs}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
-              onClick={(e) => {
-                e.preventDefault(); // Prevent navigation
-                gsap.to(noteRef.current, {
-                  opacity: 0,
-                  scale: 0.9,
-                  left: 50,
-                  duration: 0.3,
-                  display: "none",
-                  onComplete: () => {
-                    dispatch(deleteNote(noteData.uid));
-                    toggleMenu(e);
-                  },
-                });
-              }}
-            >
-              <DeleteIcon />
-            </div>
+            <AlertDialog open={false} onOpenChange={setOpen}>
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <AlertDialogTrigger
+                  data-tooltip-id="del-btn"
+                  ref={addToRefs}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-950 text-blue-50"
+                  onClick={() => setOpen(true)}
+                >
+                  <DeleteIcon />
+                </AlertDialogTrigger>
+              </div>
+              <ConfirmDialog
+                setOpen={setOpen}
+                onConfirm={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setOpen(false);
+                  handleDelete(noteRef, dispatch, noteData.uid);
+                }}
+              />
+            </AlertDialog>
 
             {/* Share button */}
             <div

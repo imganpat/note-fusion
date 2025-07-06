@@ -1,9 +1,5 @@
 import React from "react";
 import NotesContainer from "./components/NotesContainer";
-import Input from "./components/Input";
-import ImportantNotes from "./components/ImportantNotes";
-import CompletedNotes from "./components/CompletedNotes";
-import { useSelector } from "react-redux";
 import { Tooltip } from "react-tooltip";
 import {
   Route,
@@ -23,9 +19,12 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<Layout />}>
         <Route path="" element={<NotesContainer />} />
-        <Route path="/imp" element={<ImportantNotes />} />
+        <Route path="/imp" element={<NotesContainer category="important" />} />
+        <Route
+          path="/complete"
+          element={<NotesContainer category="completed" />}
+        />
         <Route path="/note/:uid" element={<Note />} />
-        <Route path="/complete" element={<CompletedNotes />} />
         <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="/">
@@ -38,12 +37,9 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  const isPopUpOpen = useSelector((state) => state.popup.isPopupOpen);
-
   return (
     <>
       <RouterProvider router={router}></RouterProvider>
-      {isPopUpOpen && <Input />}
       <Tooltip className="z-50" id="edit-btn" place="top" content="Edit note" />
       <Tooltip
         className="z-50"

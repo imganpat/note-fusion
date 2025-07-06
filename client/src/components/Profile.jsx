@@ -5,6 +5,8 @@ import { clearAllNotes } from "../store/slices/notes_slice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { AlertDialog, AlertDialogTrigger } from "./ui/alert-dialog";
+import ConfirmDialog from "./ConfirmDialog";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -44,12 +46,17 @@ const Profile = () => {
         </h3>
         <p className="text-gray-600">{userMail}</p>
         <div className="flex h-14 items-end gap-4">
-          <button
-            className="h-10 w-28 rounded-md border-2 text-sm font-medium text-gray-600 duration-200 hover:border-2 hover:border-gray-500 hover:bg-gray-200"
-            onClick={() => handleLogout()}
-          >
-            Logout
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger className="h-10 w-28 rounded-md border-2 text-sm font-medium text-gray-600 duration-200 hover:border-2 hover:border-gray-500 hover:bg-gray-200">
+              Logout
+            </AlertDialogTrigger>
+            <ConfirmDialog
+              title="Confirm Logout"
+              description="Are you sure you want to log out?"
+              confirmText="Logout"
+              onConfirm={handleLogout}
+            />
+          </AlertDialog>
 
           <Link
             // className="flex h-10 w-36 items-center justify-center rounded-md border-2 text-sm font-medium text-gray-600 duration-200 hover:border-2 hover:border-gray-500 hover:bg-gray-200"
