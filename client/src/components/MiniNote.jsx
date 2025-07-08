@@ -223,7 +223,7 @@ const MiniNote = ({ noteData }) => {
             </div>
 
             {/* Delete button */}
-            <AlertDialog open={false} onOpenChange={setOpen}>
+            <AlertDialog open={open} onOpenChange={setOpen}>
               <div
                 onClick={(e) => {
                   e.preventDefault();
