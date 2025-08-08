@@ -1,6 +1,6 @@
 # Note Fusion
 
-A modern, full-stack notes management application designed for secure and efficient note-taking. Users can create, update, and organize notes with ease while benefiting from authentication, full-screen viewing, and note-sharing capabilities. The app ensures data security and an intuitive user experience by leveraging powerful frontend and backend technologies.
+A modern, full-stack notes management application designed for secure and efficient note-taking. Users can create, update, and organize notes with ease while benefiting from authentication, full-screen viewing, and note-sharing capabilities. With a focus on responsiveness and smooth UI interactions, Note Fusion is ideal for students, professionals, and anyone who wants organized digital note management. The app ensures data security and an intuitive user experience by leveraging powerful frontend and backend technologies.
 
 ## 🎯 Demo
 
@@ -10,15 +10,23 @@ If you'd like to see the app in action, you can check out the live [demo](https:
 
 The goal of this project is to provide users with a secure and feature-rich notes management system. With authentication, users can securely store personal notes, and the sharing feature enables controlled access, ensuring privacy while allowing collaboration.
 
+NoteFusion provide a feature-rich and secure digital notebook with:
+
+- User-friendly interface and fast performance
+- Safe and private note creation
+- Ability to share notes while retaining creator-only edit access
+- Elegant UI interactions and animations
+
 ## 🚀 Features
 
-1. User Authentication - Users can register and log in to secure their notes.
-1. Full-Screen Note Viewing - Users can view notes in full screen for better readability.
-1. Note Sharing - Share notes with others. The shared note is view-only for viewers, while the creator retains editing rights.
-1. Responsive UI - Built with Tailwind CSS for a clean and modern look.
-1. Smooth Animations - Enhanced user experience using GSAP.
-1. State Management - Efficiently managed with Redux Toolkit.
-1. Secure Backend - Built with Node.js, Express, and MySQL for a reliable and scalable architecture.
+- **User Authentication** - Users can register and log in to secure their notes.
+- **Full-Screen Note Viewing** - Users can view notes in full screen for better readability.
+- **Note Sharing** - Share notes with others in view-only mode, while the creator retains editing rights.
+- **Responsive UI** - Built with Tailwind CSS + ShadCN UI for a clean and modern look with polished and accessible UI components.
+- **Smooth Animations** - Enhanced user experience using GSAP.
+- **State Management** - Redux Toolkit for efficient state handling.
+- **Secure Backend** - Built RESTful API with Node.js, Express, and MySQL for a reliable and scalable architecture.
+- **JWT Security** – Token-based auth system
 
 ## 🛠️ Tech Stack
 
@@ -26,14 +34,16 @@ The goal of this project is to provide users with a secure and feature-rich note
 
 - React - UI Library
 - Redux Toolkit - State Management
-- Tailwind CSS - Styling
+- Tailwind CSS and ShadCN UI- Styling
 - GSAP - Animations
+- ShadCN UI – Prebuilt accessible component library
 
 **Backend**
 
 - Node.js - JavaScript Runtime
 - Express - Web Framework
 - MySQL - Database
+- JWT – Authentication & security
 
 ## 🖥️ How to Run Locally
 
@@ -116,3 +126,7 @@ The frontend will run on http://localhost:5173, and the backend API will be avai
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Author
+
+Developed with ❤️ by Ganpat Choudhary
