@@ -16,4 +16,4 @@ db.connect((error) => {
     else console.log("Database connected sucesfully");
 })
 
-export default db; 
+export default db.promise(); 
