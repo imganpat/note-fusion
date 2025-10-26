@@ -2,29 +2,26 @@ import { v4 as uuidv4 } from 'uuid';
 import db from "../config/db-config.js"
 
 const getAllNotes = async (req, res) => {
-    const { username } = req.user
+    const { username } = req.user;
     const sql = "SELECT * FROM notes WHERE username = ?";
-    await db.query(sql, [username], (err, rows) => {
-        try {
-            res.status(200).json(rows)
-        } catch (err) {
-            res.status(500).json(err)
-        }
-    })
+    try {
+        const [rows] = await db.query(sql, [username])
+        res.status(200).json(rows)
+    } catch (err) {
+        res.status(500).json(err)
+    }
 }
 
 
 const getOneNote = async (req, res) => {
     const uid = req.params.uid;
-    // const { username } = req.user;
     const sql = "SELECT * FROM notes WHERE uid = ?";
-    await db.query(sql, [uid], (err, rows) => {
-        try {
-            res.status(200).json(rows)
-        } catch (err) {
-            res.status(500).json(err)
-        }
-    })
+    try {
+        const [rows] = await db.query(sql, [uid]);
+        res.status(200).json(rows)
+    } catch (err) {
+        res.status(500).json(err)
+    }
 }
 
 
@@ -37,14 +34,13 @@ const addNewNote = async (req, res) => {
     is_important = is_important ? 1 : 0;
     is_complete = is_complete ? 1 : 0;
 
-    await db.query(sql, [uid, title, description, created_at, is_important, is_complete, username], (err, rows) => {
-        try {
-            res.status(200).json({ uid, title, description, created_at, is_important, is_complete, username });
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    })
+    try {
+        await db.query(sql, [uid, title, description, created_at, is_important, is_complete, username]);
+        res.status(200).json({ uid, title, description, created_at, is_important, is_complete, username });
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
 
 }
 
@@ -52,32 +48,28 @@ const addNewNote = async (req, res) => {
 const deleteNote = async (req, res) => {
     const { uid } = req.params;
     const { username } = req.user;
-
     const sql = "DELETE FROM notes WHERE uid = ? AND username = ?";
-    await db.query(sql, [uid, username], (err, rows) => {
-        try {
-            res.status(200).json(rows);
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    })
+    try {
+        const [rows] = await db.query(sql, [uid, username]);
+        res.status(200).json(rows);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
 }
 
 
 const toggleImportance = async (req, res) => {
     const { uid } = req.params;
     const { username } = req.user;
-
     const sql = "UPDATE notes SET is_important = CASE WHEN is_important THEN 0 ELSE 1 END WHERE uid = ? AND username = ?";
-    await db.query(sql, [uid, username], (err, rows) => {
-        try {
-            res.status(200).json(rows);
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    })
+    try {
+        const [rows] = await db.query(sql, [uid, username]);
+        res.status(200).json(rows);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
 }
 
 
@@ -85,14 +77,13 @@ const toggleCompletion = async (req, res) => {
     const { uid } = req.params;
     const { username } = req.user;
     const sql = "UPDATE notes SET is_complete = CASE WHEN is_complete THEN 0 ELSE 1 END WHERE uid = ? AND username = ?";
-    await db.query(sql, [uid, username], (err, rows) => {
-        try {
-            res.status(200).json(rows);
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    })
+    try {
+        const [rows] = await db.query(sql, [uid, username]);
+        res.status(200).json(rows);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
 }
 
 
@@ -101,17 +92,15 @@ const editNote = async (req, res) => {
     const { username } = req.user;
     let { title, description, is_important } = req.body;
     is_important = is_important ? 1 : 0;
-
     const sql = "UPDATE notes SET title = ?, description = ?, is_important = ? WHERE uid = ? AND username = ?";
 
-    await db.query(sql, [title, description, is_important, uid, username], (err, rows) => {
-        try {
-            res.status(200).json(rows);
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    })
+    try {
+        const [rows] = await db.query(sql, [title, description, is_important, uid, username]);
+        res.status(200).json(rows);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
 }
 
 export default { getAllNotes, getOneNote, addNewNote, deleteNote, toggleImportance, toggleCompletion, editNote }
